@@ -161,6 +161,14 @@
            relative overflow-hidden;
   }
 
+  /* Taller Wave Header - 35% of screen height */
+  .wave-header-tall {
+    @apply bg-gradient-to-br from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
+           relative overflow-hidden;
+    min-height: 35vh;
+  }
+
   .wave-shape {
     @apply absolute bottom-0 left-0 w-full h-8;
     background: hsl(var(--background));
@@ -168,16 +176,25 @@
     transform: translateY(50%);
   }
 
-  /* Watermark Background */
+  /* Enhanced Wave Shape with smoother curve */
+  .wave-shape-enhanced {
+    @apply absolute bottom-0 left-0 w-full h-12;
+    background: hsl(var(--background));
+    clip-path: ellipse(150% 100% at 50% 100%);
+    transform: translateY(60%);
+  }
+
+  /* Watermark Background - Enhanced visibility */
   .watermark-background {
-    @apply absolute inset-0 opacity-[0.02] pointer-events-none;
+    @apply absolute inset-0 opacity-[0.06] pointer-events-none;
     background-image: 
       radial-gradient(circle at 20% 20%, hsl(var(--aircare-red)) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, hsl(var(--aircare-blue)) 0%, transparent 50%),
-      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80"><circle cx="50" cy="50" r="20" fill="none" stroke="hsl(var(--primary))" stroke-width="2" opacity="0.3"/><text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="hsl(var(--primary))" opacity="0.4">AC</text></svg>');
-    background-size: 150px 150px, 150px 150px, 80px 80px;
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="60" height="60"><circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/><text x="50" y="50" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="currentColor" opacity="0.5">AC</text></svg>');
+    background-size: 120px 120px, 120px 120px, 60px 60px;
     background-position: 0 0, 100% 100%, 0 0;
     background-repeat: repeat;
+    color: hsl(var(--primary));
   }
 
   /* Floating Cards */
@@ -219,6 +236,27 @@
            shadow-[var(--shadow-soft)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
            hover:scale-105 active:scale-95;
+  }
+
+  /* Proportionate Primary Button */
+  .gradient-button-primary {
+    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
+           text-white font-semibold rounded-full px-8 py-3.5
+           shadow-[var(--shadow-medium)] hover:shadow-[var(--glow-primary)]
+           transition-[var(--transition-smooth)]
+           hover:scale-[1.02] active:scale-[0.98]
+           max-w-sm mx-auto;
+  }
+
+  /* Compact Secondary Buttons */
+  .secondary-button-compact {
+    @apply p-4 text-center flex flex-col items-center justify-center
+           border-2 border-primary/30 hover:border-primary/60
+           hover:bg-primary/5
+           min-h-[80px] cursor-pointer rounded-xl
+           hover:shadow-[var(--glow-primary)]
+           transition-all duration-300;
   }
   
   .glass-card {
