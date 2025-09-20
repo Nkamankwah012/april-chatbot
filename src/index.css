@@ -8,11 +8,13 @@
 
 @layer base {
   :root {
-    /* AirCare Brand Colors */
-    --aircare-primary: 214 100% 50%;
-    --aircare-secondary: 194 100% 70%;
-    --aircare-gradient: linear-gradient(135deg, hsl(214 100% 50%), hsl(194 100% 70%));
-    --aircare-gradient-soft: linear-gradient(135deg, hsl(214 100% 50% / 0.1), hsl(194 100% 70% / 0.1));
+    /* AirCare Brand Colors - Updated to match logo */
+    --aircare-primary: 0 65% 45%;          /* Deep red from logo */
+    --aircare-secondary: 200 85% 50%;      /* Blue from logo */
+    --aircare-accent: 15 90% 55%;          /* Orange from swoosh */
+    --aircare-gradient: linear-gradient(135deg, hsl(0 65% 45%), hsl(15 90% 55%));
+    --aircare-gradient-blue: linear-gradient(135deg, hsl(200 85% 50%), hsl(220 80% 60%));
+    --aircare-gradient-soft: linear-gradient(135deg, hsl(0 65% 45% / 0.1), hsl(200 85% 50% / 0.1));
     
     /* Widget Background System */
     --widget-background: 210 20% 98%;
@@ -25,12 +27,12 @@
     --foreground-muted: 215 10% 65%;
     
     /* Interactive Elements */
-    --interactive-primary: 214 100% 50%;
-    --interactive-hover: 214 100% 45%;
-    --interactive-active: 214 100% 40%;
+    --interactive-primary: 0 65% 45%;
+    --interactive-hover: 0 65% 40%;
+    --interactive-active: 0 65% 35%;
     
     /* Chat Colors */
-    --chat-assistant: 214 100% 50%;
+    --chat-assistant: 200 85% 50%;
     --chat-assistant-text: 0 0% 100%;
     --chat-user: 210 15% 92%;
     --chat-user-text: 215 20% 15%;
@@ -57,13 +59,13 @@
     --card-foreground: 215 20% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 215 20% 15%;
-    --primary: 214 100% 50%;
+    --primary: 0 65% 45%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 15% 92%;
-    --secondary-foreground: 215 20% 15%;
+    --secondary: 200 85% 50%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 210 15% 95%;
     --muted-foreground: 215 15% 45%;
-    --accent: 194 100% 70%;
+    --accent: 15 90% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -156,7 +158,7 @@
 
   .curved-wave-header {
     @apply relative text-white;
-    background: linear-gradient(135deg, hsl(var(--aircare-primary)), hsl(var(--aircare-secondary)));
+    background: linear-gradient(135deg, hsl(var(--aircare-primary)), hsl(var(--aircare-accent)));
     padding: 2rem 1.5rem 4rem;
   }
 

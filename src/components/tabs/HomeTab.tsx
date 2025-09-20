@@ -9,8 +9,12 @@ export const HomeTab = ({ onStartChat }: HomeTabProps) => {
     <div className="h-full flex flex-col">
       {/* Curved Wave Header */}
       <div className="curved-wave-header animate-fade-in">
-        <div className="logo-container mb-4">
-          <span className="text-sm font-bold">AC</span>
+        <div className="flex justify-center mb-4">
+          <img 
+            src="/src/assets/aircare-logo.jpeg" 
+            alt="AirCare Heating & Cooling" 
+            className="h-16 w-auto object-contain bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+          />
         </div>
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold">Hi, there!</h1>
