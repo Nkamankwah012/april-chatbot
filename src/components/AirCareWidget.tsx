@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { HomeTab } from "./tabs/HomeTab";
 import { ChatTab } from "./tabs/ChatTab";
 import { FAQTab } from "./tabs/FAQTab";
+import aircareLogoImg from "@/assets/aircare-logo.jpeg";
 
 export type TabType = "home" | "chat" | "faq";
 
@@ -40,11 +41,15 @@ export const AirCareWidget = () => {
     <div className="widget-container w-full max-w-md mx-auto h-[600px] flex flex-col">
       {/* Header */}
       <div className="widget-header">
-        <div className="flex items-center justify-center space-x-2">
-          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-sm font-bold">AC</span>
+        <div className="flex items-center justify-center space-x-3">
+          <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center p-1">
+            <img 
+              src={aircareLogoImg} 
+              alt="AirCare Logo" 
+              className="w-full h-full object-contain rounded-full"
+            />
           </div>
-          <span className="text-lg font-semibold">AirCare</span>
+          <span className="text-lg font-semibold">AirCare Assistant</span>
         </div>
       </div>
 

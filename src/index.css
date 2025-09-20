@@ -8,11 +8,11 @@
 
 @layer base {
   :root {
-    /* AirCare Brand Colors */
-    --aircare-primary: 214 100% 50%;
-    --aircare-secondary: 194 100% 70%;
-    --aircare-gradient: linear-gradient(135deg, hsl(214 100% 50%), hsl(194 100% 70%));
-    --aircare-gradient-soft: linear-gradient(135deg, hsl(214 100% 50% / 0.1), hsl(194 100% 70% / 0.1));
+    /* AirCare Brand Colors - Red & Blue Theme */
+    --aircare-red: 0 84% 60%;
+    --aircare-blue: 208 100% 50%;
+    --aircare-gradient: linear-gradient(135deg, hsl(0 84% 60%), hsl(208 100% 50%));
+    --aircare-gradient-soft: linear-gradient(135deg, hsl(0 84% 60% / 0.1), hsl(208 100% 50% / 0.1));
     
     /* Widget Background System */
     --widget-background: 210 20% 98%;
@@ -25,12 +25,12 @@
     --foreground-muted: 215 10% 65%;
     
     /* Interactive Elements */
-    --interactive-primary: 214 100% 50%;
-    --interactive-hover: 214 100% 45%;
-    --interactive-active: 214 100% 40%;
+    --interactive-primary: 208 100% 50%;
+    --interactive-hover: 208 100% 45%;
+    --interactive-active: 208 100% 40%;
     
     /* Chat Colors */
-    --chat-assistant: 214 100% 50%;
+    --chat-assistant: 208 100% 50%;
     --chat-assistant-text: 0 0% 100%;
     --chat-user: 210 15% 92%;
     --chat-user-text: 215 20% 15%;
@@ -57,19 +57,19 @@
     --card-foreground: 215 20% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 215 20% 15%;
-    --primary: 214 100% 50%;
+    --primary: 208 100% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 15% 92%;
     --secondary-foreground: 215 20% 15%;
     --muted: 210 15% 95%;
     --muted-foreground: 215 15% 45%;
-    --accent: 194 100% 70%;
+    --accent: 0 84% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 210 15% 88%;
     --input: 210 15% 88%;
-    --ring: 214 100% 50%;
+    --ring: 208 100% 50%;
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
@@ -149,8 +149,8 @@
   }
   
   .widget-header {
-    @apply bg-gradient-to-r from-[hsl(var(--aircare-primary))] 
-           to-[hsl(var(--aircare-secondary))]
+    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
            text-white p-4 text-center font-medium;
   }
   
@@ -167,8 +167,8 @@
   }
   
   .gradient-button {
-    @apply bg-gradient-to-r from-[hsl(var(--aircare-primary))] 
-           to-[hsl(var(--aircare-secondary))]
+    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
            text-white font-medium rounded-full px-6 py-3
            shadow-[var(--shadow-soft)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
@@ -183,7 +183,7 @@
   }
   
   .tab-active {
-    @apply text-[hsl(var(--aircare-primary))] scale-110
+    @apply text-[hsl(var(--aircare-blue))] scale-110
            drop-shadow-[var(--glow-primary)];
   }
   
