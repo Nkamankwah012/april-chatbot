@@ -153,6 +153,61 @@
            to-[hsl(var(--aircare-secondary))]
            text-white p-4 text-center font-medium;
   }
+
+  .curved-wave-header {
+    @apply relative text-white;
+    background: linear-gradient(135deg, hsl(var(--aircare-primary)), hsl(var(--aircare-secondary)));
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .curved-wave-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ctext x='15' y='35' font-family='Arial' font-size='12' font-weight='bold'%3EAC%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .curved-wave-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: hsl(var(--widget-surface));
+    clip-path: ellipse(100% 100% at 50% 100%);
+    transform: translateY(50%);
+  }
+
+  .logo-container {
+    @apply w-12 h-12 bg-white/20 rounded-full flex items-center justify-center
+           backdrop-blur-sm border border-white/30 shadow-sm;
+  }
+
+  .secondary-button {
+    @apply border-2 border-[hsl(var(--aircare-primary))] bg-transparent 
+           text-[hsl(var(--aircare-primary))] px-6 py-3 rounded-full font-medium 
+           hover:bg-[hsl(var(--aircare-primary))] hover:text-white 
+           transition-[var(--transition-smooth)] shadow-sm hover:shadow-md
+           flex-1 min-w-0;
+  }
+
+  .conversation-card {
+    @apply bg-[hsl(var(--widget-surface))] rounded-xl shadow-[var(--shadow-soft)]
+           border border-border/30 backdrop-blur-sm hover:shadow-[var(--shadow-medium)]
+           transition-[var(--transition-smooth)] cursor-pointer;
+  }
+
+  .call-card {
+    @apply bg-[hsl(var(--widget-surface))] rounded-xl shadow-[var(--shadow-soft)]
+           border border-border/30 backdrop-blur-sm hover:shadow-[var(--shadow-medium)]
+           transition-[var(--transition-smooth)] cursor-pointer;
+  }
   
   .chat-bubble-assistant {
     @apply bg-[hsl(var(--chat-assistant))] text-[hsl(var(--chat-assistant-text))]
