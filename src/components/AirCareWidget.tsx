@@ -23,17 +23,40 @@ const tabs: Tab[] = [
 
 export const AirCareWidget = () => {
   const [activeTab, setActiveTab] = useState<TabType>("home");
+  const [initialChatMessage, setInitialChatMessage] = useState<string | undefined>();
+
+  const handleBookDiagnostic = () => {
+    setInitialChatMessage("I'd like to book a diagnostic appointment.");
+    setActiveTab("chat");
+  };
+
+  const handleRequestEstimate = () => {
+    setInitialChatMessage("I'd like to request an estimate for a system replacement.");
+    setActiveTab("chat");
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "home":
-        return <HomeTab onStartChat={() => setActiveTab("chat")} />;
+        return (
+          <HomeTab 
+            onStartChat={() => setActiveTab("chat")} 
+            onBookDiagnostic={handleBookDiagnostic}
+            onRequestEstimate={handleRequestEstimate}
+          />
+        );
       case "chat":
-        return <ChatTab />;
+        return <ChatTab initialMessage={initialChatMessage} />;
       case "faq":
         return <FAQTab />;
       default:
-        return <HomeTab onStartChat={() => setActiveTab("chat")} />;
+        return (
+          <HomeTab 
+            onStartChat={() => setActiveTab("chat")} 
+            onBookDiagnostic={handleBookDiagnostic}
+            onRequestEstimate={handleRequestEstimate}
+          />
+        );
     }
   };
 
