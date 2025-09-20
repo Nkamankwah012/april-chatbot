@@ -65,8 +65,8 @@ export const AirCareWidget = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="border-t border-border/30 bg-gradient-to-r from-primary/5 to-secondary/5 backdrop-blur-sm">
-        <nav className="flex justify-around items-center py-3">
+      <div className="border-t border-border/30 bg-white/50 backdrop-blur-sm">
+        <nav className="flex justify-around items-center py-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -76,10 +76,8 @@ export const AirCareWidget = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex flex-col items-center space-y-1 py-2 px-4 rounded-xl transition-all duration-300",
-                  isActive 
-                    ? "bg-gradient-to-r from-primary to-accent text-white shadow-lg scale-105" 
-                    : "text-foreground-muted hover:text-primary hover:bg-primary/10 hover:scale-105"
+                  "flex flex-col items-center space-y-1 py-2 px-3 rounded-lg transition-all duration-300",
+                  isActive ? "tab-active" : "tab-inactive"
                 )}
               >
                 <Icon className="w-5 h-5" />
