@@ -169,6 +169,15 @@
     min-height: 35vh;
   }
 
+  /* Refined Wave Header - Better proportions */
+  .wave-header-refined {
+    @apply bg-gradient-to-br from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
+           relative overflow-hidden;
+    height: 28vh;
+    min-height: 180px;
+  }
+
   .wave-shape {
     @apply absolute bottom-0 left-0 w-full h-8;
     background: hsl(var(--background));
@@ -249,6 +258,16 @@
            max-w-sm mx-auto;
   }
 
+  /* Refined Primary Button - Better proportions */
+  .gradient-button-refined {
+    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
+           to-[hsl(var(--aircare-blue))]
+           text-white font-medium rounded-full px-6 py-2.5
+           shadow-[var(--shadow-medium)] hover:shadow-[var(--glow-primary)]
+           transition-[var(--transition-smooth)]
+           hover:scale-[1.02] active:scale-[0.98];
+  }
+
   /* Compact Secondary Buttons */
   .secondary-button-compact {
     @apply p-4 text-center flex flex-col items-center justify-center
@@ -256,6 +275,16 @@
            hover:bg-primary/5
            min-h-[80px] cursor-pointer rounded-xl
            hover:shadow-[var(--glow-primary)]
+           transition-all duration-300;
+  }
+
+  /* Refined Secondary Buttons - Better proportions */
+  .secondary-button-refined {
+    @apply p-3 text-center flex flex-col items-center justify-center
+           border border-primary/30 hover:border-primary/50
+           hover:bg-primary/5
+           min-h-[65px] cursor-pointer rounded-lg
+           hover:shadow-[var(--shadow-soft)]
            transition-all duration-300;
   }
   
