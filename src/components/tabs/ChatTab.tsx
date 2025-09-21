@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
+import aprilAvatar from "@/assets/april-avatar.jpg";
 
 interface Message {
   id: string;
@@ -122,7 +123,8 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
               className={`flex ${message.isUser ? 'justify-end' : 'justify-start items-start space-x-2'}`}
             >
               {!message.isUser && (
-                <Avatar className="w-8 h-8 flex-shrink-0">
+                <Avatar className="w-10 h-10 flex-shrink-0">
+                  <AvatarImage src={aprilAvatar} alt="April" className="object-cover" />
                   <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-xs">
                     A
                   </AvatarFallback>
@@ -144,7 +146,8 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
           ))}
           {isLoading && (
             <div className="flex justify-start items-start space-x-2">
-              <Avatar className="w-8 h-8 flex-shrink-0">
+              <Avatar className="w-10 h-10 flex-shrink-0">
+                <AvatarImage src={aprilAvatar} alt="April" className="object-cover" />
                 <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-xs">
                   A
                 </AvatarFallback>
