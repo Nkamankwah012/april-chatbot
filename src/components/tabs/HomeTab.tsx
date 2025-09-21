@@ -13,7 +13,7 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: Ho
       {/* Wave Header Background - Refined Height */}
       <div className="wave-header-refined relative">
         {/* Logo and Greeting */}
-        <div className="relative z-10 pt-6 pb-12 px-6">
+        <div className="relative z-10 pt-4 pb-8 px-6">
           <div className="flex items-start space-x-4 mb-6">
             <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg">
               <img 
