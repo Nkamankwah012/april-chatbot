@@ -97,9 +97,12 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
               <ArrowLeft className="w-4 h-4" />
             </Button>
           )}
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">A</span>
-          </div>
+          <Avatar className="w-10 h-10">
+            <AvatarImage src={aprilAvatar} alt="April" className="object-cover" />
+            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-sm">
+              A
+            </AvatarFallback>
+          </Avatar>
           <div className="flex-1">
             <h3 className="font-semibold text-foreground">April</h3>
             <p className="text-sm text-foreground-secondary">Your AirCare virtual assistant</p>
