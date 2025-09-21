@@ -14,8 +14,8 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: Ho
       <div className="wave-header-refined relative">
         {/* Logo and Greeting */}
         <div className="relative z-10 pt-4 pb-5 px-6">
-          <div className="flex flex-col items-center text-center space-y-3">
-            <div className="w-12 h-12 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg">
+          <div className="flex flex-col items-center text-center space-y-5">
+            <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg">
               <img 
                 src={aircareLogoImg} 
                 alt="AirCare Logo" 
