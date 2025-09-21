@@ -39,6 +39,20 @@ export const AirCareWidget = () => {
 
   return (
     <div className="widget-container w-full max-w-md mx-auto h-[600px] flex flex-col">
+      {/* Header */}
+      <div className="widget-header">
+        <div className="flex items-center justify-center space-x-3">
+          <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center p-1">
+            <img 
+              src={aircareLogoImg} 
+              alt="AirCare Logo" 
+              className="w-full h-full object-contain rounded-full"
+            />
+          </div>
+          <span className="text-lg font-semibold">AirCare Assistant</span>
+        </div>
+      </div>
+
       {/* Tab Content */}
       <div className="flex-1 relative">
         <AnimatePresence mode="wait">
