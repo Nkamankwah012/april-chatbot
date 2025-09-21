@@ -1,23 +1,13 @@
 import { ArrowRight, Phone, MessageSquare, Calendar, FileText } from "lucide-react";
 import aircareLogoImg from "@/assets/aircare-logo.jpeg";
-import { conversationStorage } from "@/lib/conversationStorage";
-import { useState, useEffect } from "react";
 
 interface HomeTabProps {
   onStartChat: () => void;
   onBookDiagnostic: () => void;
   onRequestEstimate: () => void;
-  onContinueConversation: () => void;
 }
 
-export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onContinueConversation }: HomeTabProps) => {
-  const [recentConversation, setRecentConversation] = useState<any>(null);
-
-  useEffect(() => {
-    const recent = conversationStorage.getMostRecentConversation();
-    setRecentConversation(recent);
-  }, []);
-
+export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: HomeTabProps) => {
   return (
     <div className="h-full flex flex-col relative overflow-hidden">
       {/* Wave Header Background - Refined Height */}
@@ -85,29 +75,19 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
           </div>
 
           {/* Continue Conversation Card - Floating */}
-          {recentConversation && (
-            <div 
-              className="floating-card conversation-card animate-fade-in animation-delay-600 group cursor-pointer"
-              onClick={onContinueConversation}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-semibold text-foreground text-sm">Continue Recent Conversation</h3>
-                <ArrowRight className="w-4 h-4 text-foreground-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </div>
-              <p className="text-xs text-foreground-secondary mb-3 line-clamp-2">
-                "{recentConversation.preview}..."
-              </p>
-              <div className="flex items-center justify-between text-xs text-foreground-muted">
-                <span className="font-medium">with April</span>
-                <span>{recentConversation.lastMessageTime.toLocaleString([], { 
-                  month: 'short', 
-                  day: 'numeric', 
-                  hour: '2-digit', 
-                  minute: '2-digit' 
-                })}</span>
-              </div>
+          <div className="floating-card conversation-card animate-fade-in animation-delay-600 group cursor-pointer">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="font-semibold text-foreground text-sm">Continue Recent Conversation</h3>
+              <ArrowRight className="w-4 h-4 text-foreground-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
             </div>
-          )}
+            <p className="text-xs text-foreground-secondary mb-3 line-clamp-2">
+              "I'm having issues with my AC unit not cooling properly and making strange noises..."
+            </p>
+            <div className="flex items-center justify-between text-xs text-foreground-muted">
+              <span className="font-medium">with April</span>
+              <span>2 hours ago</span>
+            </div>
+          </div>
 
           {/* Live Call Card - Floating */}
           <div className="floating-card conversation-card animate-fade-in animation-delay-800 group cursor-pointer">

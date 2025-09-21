@@ -6,7 +6,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-new-avatar.jpg";
-import { conversationStorage } from "@/lib/conversationStorage";
 
 interface Message {
   id: string;
@@ -18,26 +17,18 @@ interface Message {
 interface ChatTabProps {
   initialMessage?: string;
   onBackToHome?: () => void;
-  existingMessages?: Message[];
 }
 
-export const ChatTab = ({ initialMessage, onBackToHome, existingMessages }: ChatTabProps) => {
-  const [messages, setMessages] = useState<Message[]>(existingMessages || []);
+export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (initialMessage && messages.length === 0) {
+    if (initialMessage) {
       sendMessage(initialMessage);
     }
   }, [initialMessage]);
-
-  // Save conversation whenever messages change
-  useEffect(() => {
-    if (messages.length > 0) {
-      conversationStorage.saveConversation(messages);
-    }
-  }, [messages]);
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
