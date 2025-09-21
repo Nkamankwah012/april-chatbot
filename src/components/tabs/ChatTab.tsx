@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 
 interface Message {
   id: string;
@@ -14,9 +15,10 @@ interface Message {
 
 interface ChatTabProps {
   initialMessage?: string;
+  onBackToHome?: () => void;
 }
 
-export const ChatTab = ({ initialMessage }: ChatTabProps) => {
+export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -79,19 +81,29 @@ export const ChatTab = ({ initialMessage }: ChatTabProps) => {
     sendMessage(inputMessage);
   };
 
+  const resetConversation = () => {
+    setMessages([]);
+    setInputMessage("");
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Assistant Header */}
       <div className="p-4 border-b border-border/30 bg-white/50 backdrop-blur-sm">
         <div className="flex items-center space-x-3">
+          {onBackToHome && (
+            <Button variant="ghost" size="sm" onClick={onBackToHome} className="p-2">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          )}
           <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
             <span className="text-white font-semibold text-sm">A</span>
           </div>
-          <div>
+          <div className="flex-1">
             <h3 className="font-semibold text-foreground">April</h3>
             <p className="text-sm text-foreground-secondary">Your AirCare virtual assistant</p>
           </div>
-          <div className="ml-auto w-2 h-2 bg-green-400 rounded-full"></div>
+          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
         </div>
       </div>
 
@@ -107,13 +119,20 @@ export const ChatTab = ({ initialMessage }: ChatTabProps) => {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.isUser ? 'justify-end' : 'justify-start items-start space-x-2'}`}
             >
+              {!message.isUser && (
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-xs">
+                    A
+                  </AvatarFallback>
+                </Avatar>
+              )}
               <div
                 className={`max-w-[80%] p-3 rounded-lg ${
                   message.isUser
                     ? 'bg-primary text-primary-foreground ml-4'
-                    : 'bg-muted text-muted-foreground mr-4'
+                    : 'bg-muted text-muted-foreground'
                 }`}
               >
                 <p className="text-sm">{message.text}</p>
@@ -124,8 +143,13 @@ export const ChatTab = ({ initialMessage }: ChatTabProps) => {
             </div>
           ))}
           {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-muted text-muted-foreground p-3 rounded-lg mr-4">
+            <div className="flex justify-start items-start space-x-2">
+              <Avatar className="w-8 h-8 flex-shrink-0">
+                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-xs">
+                  A
+                </AvatarFallback>
+              </Avatar>
+              <div className="bg-muted text-muted-foreground p-3 rounded-lg">
                 <p className="text-sm">April is typing...</p>
               </div>
             </div>
@@ -136,13 +160,25 @@ export const ChatTab = ({ initialMessage }: ChatTabProps) => {
       {/* Message Input */}
       <div className="p-4 border-t border-border/30">
         <form onSubmit={handleSubmit} className="flex space-x-2">
-          <Input
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
-            disabled={isLoading}
-            className="flex-1"
-          />
+          <div className="relative flex-1">
+            <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Type your message..."
+              disabled={isLoading}
+              className="pr-10"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={resetConversation}
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+              disabled={isLoading}
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
+          </div>
           <Button type="submit" disabled={isLoading || !inputMessage.trim()}>
             <Send className="w-4 h-4" />
           </Button>

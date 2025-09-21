@@ -46,7 +46,12 @@ export const AirCareWidget = () => {
           />
         );
       case "chat":
-        return <ChatTab initialMessage={initialChatMessage} />;
+        return (
+          <ChatTab 
+            initialMessage={initialChatMessage} 
+            onBackToHome={() => setActiveTab("home")}
+          />
+        );
       case "faq":
         return <FAQTab />;
       default:
