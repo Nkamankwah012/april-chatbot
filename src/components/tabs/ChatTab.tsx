@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-avatar-new.jpg";
+import { conversationStorage } from "@/lib/conversationStorage";
 
 interface Message {
   id: string;
@@ -17,18 +18,37 @@ interface Message {
 interface ChatTabProps {
   initialMessage?: string;
   onBackToHome?: () => void;
+  shouldLoadPrevious?: boolean;
 }
 
-export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
+export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string>("");
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (initialMessage) {
-      sendMessage(initialMessage);
+    // Load previous conversation if requested
+    if (shouldLoadPrevious) {
+      const previousConversation = conversationStorage.getUserConversation();
+      if (previousConversation) {
+        setMessages(previousConversation.messages);
+        setSessionId(previousConversation.sessionId);
+      } else {
+        // Generate new session ID if no previous conversation
+        setSessionId(Date.now().toString());
+      }
+    } else {
+      // Generate new session ID for new conversations
+      setSessionId(Date.now().toString());
+      
+      // Send initial message if provided
+      if (initialMessage) {
+        setTimeout(() => sendMessage(initialMessage), 100);
+      }
     }
-  }, [initialMessage]);
+  }, [initialMessage, shouldLoadPrevious]);
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -46,7 +66,7 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
 
     try {
       const { data, error } = await supabase.functions.invoke('botpress-chat', {
-        body: { message }
+        body: { message, sessionId }
       });
 
       if (error) {
@@ -62,7 +82,11 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, botMessage]);
+      const updatedMessages = [...messages, userMessage, botMessage];
+      setMessages(updatedMessages);
+      
+      // Save conversation to storage
+      conversationStorage.saveUserConversation(sessionId, updatedMessages);
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
@@ -85,6 +109,8 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   const resetConversation = () => {
     setMessages([]);
     setInputMessage("");
+    setSessionId(Date.now().toString());
+    conversationStorage.clearUserConversation();
   };
 
   return (

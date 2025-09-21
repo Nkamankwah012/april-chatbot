@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
+    const { message, sessionId } = await req.json();
     
     if (!message) {
       return new Response(
@@ -37,7 +37,20 @@ serve(async (req) => {
       );
     }
 
-    console.log('Sending message to Botpress:', message);
+    console.log('Sending message to Botpress:', message, 'Session ID:', sessionId);
+
+    // Prepare the request body with session support
+    const requestBody: any = {
+      type: 'text',
+      payload: {
+        text: message
+      }
+    };
+
+    // Include sessionId if provided for conversation continuity
+    if (sessionId) {
+      requestBody.conversationId = sessionId;
+    }
 
     // Make direct API call to Botpress
     const response = await fetch('https://api.botpress.cloud/v1/chat/messages', {
@@ -47,12 +60,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'x-bot-id': 'your-bot-id' // You'll need to provide your actual bot ID
       },
-      body: JSON.stringify({
-        type: 'text',
-        payload: {
-          text: message
-        }
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {

@@ -24,6 +24,7 @@ const tabs: Tab[] = [
 export const AirCareWidget = () => {
   const [activeTab, setActiveTab] = useState<TabType>("home");
   const [initialChatMessage, setInitialChatMessage] = useState<string | undefined>();
+  const [shouldLoadPrevious, setShouldLoadPrevious] = useState(false);
 
   const handleBookDiagnostic = () => {
     setInitialChatMessage("I'd like to book a diagnostic appointment.");
@@ -32,6 +33,19 @@ export const AirCareWidget = () => {
 
   const handleRequestEstimate = () => {
     setInitialChatMessage("I'd like to request an estimate for a system replacement.");
+    setShouldLoadPrevious(false);
+    setActiveTab("chat");
+  };
+
+  const handleContinueConversation = () => {
+    setInitialChatMessage(undefined);
+    setShouldLoadPrevious(true);
+    setActiveTab("chat");
+  };
+
+  const handleStartNewChat = () => {
+    setInitialChatMessage(undefined);
+    setShouldLoadPrevious(false);
     setActiveTab("chat");
   };
 
@@ -40,9 +54,10 @@ export const AirCareWidget = () => {
       case "home":
         return (
           <HomeTab 
-            onStartChat={() => setActiveTab("chat")} 
+            onStartChat={handleStartNewChat} 
             onBookDiagnostic={handleBookDiagnostic}
             onRequestEstimate={handleRequestEstimate}
+            onContinueConversation={handleContinueConversation}
           />
         );
       case "chat":
@@ -50,6 +65,7 @@ export const AirCareWidget = () => {
           <ChatTab 
             initialMessage={initialChatMessage} 
             onBackToHome={() => setActiveTab("home")}
+            shouldLoadPrevious={shouldLoadPrevious}
           />
         );
       case "faq":
@@ -57,9 +73,10 @@ export const AirCareWidget = () => {
       default:
         return (
           <HomeTab 
-            onStartChat={() => setActiveTab("chat")} 
+            onStartChat={handleStartNewChat} 
             onBookDiagnostic={handleBookDiagnostic}
             onRequestEstimate={handleRequestEstimate}
+            onContinueConversation={handleContinueConversation}
           />
         );
     }
