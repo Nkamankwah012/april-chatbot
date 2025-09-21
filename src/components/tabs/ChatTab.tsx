@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
-import aprilAvatar from "@/assets/april-new-avatar.jpg";
+import aprilAvatar from "@/assets/april-avatar-new.jpg";
 
 interface Message {
   id: string;
