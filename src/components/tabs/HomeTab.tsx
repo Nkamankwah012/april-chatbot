@@ -98,7 +98,7 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: Ho
               <div className="flex-1">
                 <h3 className="font-semibold text-foreground text-sm mb-1">Start a Live Call</h3>
                 <p className="text-xs text-foreground-secondary">
-                  Speak directly with our technicians
+                  Speak directly to an Air Care representative
                 </p>
               </div>
               <div className="flex items-center space-x-2">
