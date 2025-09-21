@@ -13,20 +13,20 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: Ho
       {/* Wave Header Background - Refined Height */}
       <div className="wave-header-refined relative">
         {/* Logo and Greeting */}
-        <div className="relative z-10 pt-3 pb-6 px-6">
-          <div className="flex items-start space-x-4 mb-6">
-            <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg">
+        <div className="relative z-10 pt-4 pb-5 px-6">
+          <div className="flex flex-col items-center text-center space-y-3">
+            <div className="w-12 h-12 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg">
               <img 
                 src={aircareLogoImg} 
                 alt="AirCare Logo" 
                 className="w-full h-full object-contain rounded-full"
               />
             </div>
-            <div className="text-left space-y-2 pt-1">
+            <div className="space-y-1">
               <h1 className="text-2xl font-bold text-white drop-shadow-lg">
                 Hi, there!
               </h1>
-              <p className="text-white/95 text-base drop-shadow-md">
+              <p className="text-white/90 text-base drop-shadow-md">
                 How can we help you today??
               </p>
             </div>
