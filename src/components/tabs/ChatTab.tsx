@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-avatar-new.jpg";
 import { conversationStorage } from "@/lib/conversationStorage";
+import { botpressService } from "@/services/botpressService";
 
 interface Message {
   id: string;
@@ -65,19 +65,22 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('botpress-chat', {
-        body: { message, sessionId }
-      });
-
-      if (error) {
-        console.error('Error calling Botpress:', error);
-        throw error;
+      // Set or start conversation with Botpress
+      if (sessionId && !botpressService.getConversationId()) {
+        botpressService.setConversationId(sessionId);
       }
 
-      // Add bot response
+      const response = await botpressService.sendMessage(message);
+      
+      // Get the bot's response from the conversation
+      const botMessages = await botpressService.getMessages();
+      const latestBotMessage = botMessages.messages
+        ?.filter((msg: any) => msg.payload?.text && msg.userId !== 'user')
+        ?.pop();
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response?.payload?.text || "I received your message!",
+        text: latestBotMessage?.payload?.text || "I received your message!",
         isUser: false,
         timestamp: new Date()
       };
@@ -85,8 +88,14 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       const updatedMessages = [...messages, userMessage, botMessage];
       setMessages(updatedMessages);
       
+      // Update session ID if new conversation was created
+      const currentConversationId = botpressService.getConversationId();
+      if (currentConversationId && currentConversationId !== sessionId) {
+        setSessionId(currentConversationId);
+      }
+      
       // Save conversation to storage
-      conversationStorage.saveUserConversation(sessionId, updatedMessages);
+      conversationStorage.saveUserConversation(currentConversationId || sessionId, updatedMessages);
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
