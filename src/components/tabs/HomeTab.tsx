@@ -3,11 +3,9 @@ import aircareLogoImg from "@/assets/aircare-logo.jpeg";
 
 interface HomeTabProps {
   onStartChat: () => void;
-  onBookDiagnostic: () => void;
-  onRequestEstimate: () => void;
 }
 
-export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: HomeTabProps) => {
+export const HomeTab = ({ onStartChat }: HomeTabProps) => {
   return (
     <div className="h-full flex flex-col relative overflow-hidden">
       {/* Wave Header Background - Refined Height */}
@@ -58,17 +56,11 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate }: Ho
 
           {/* Secondary Actions - Properly Sized Buttons */}
           <div className="grid grid-cols-2 gap-3 animate-fade-in animation-delay-400">
-            <button 
-              onClick={onBookDiagnostic}
-              className="floating-card secondary-button-refined group"
-            >
+            <button className="floating-card secondary-button-refined group">
               <Calendar className="w-4 h-4 text-primary mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-xs font-medium text-foreground">Book Diagnostic</span>
             </button>
-            <button 
-              onClick={onRequestEstimate}
-              className="floating-card secondary-button-refined group"
-            >
+            <button className="floating-card secondary-button-refined group">
               <FileText className="w-4 h-4 text-primary mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-xs font-medium text-foreground">Request Estimate</span>
             </button>
