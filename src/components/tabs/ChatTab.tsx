@@ -115,9 +115,15 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
-            <div className="text-center text-muted-foreground py-8">
-              <p>Hello! I'm April, your AirCare assistant.</p>
-              <p className="text-sm mt-2">How can I help you today?</p>
+            <div className="text-center py-12">
+              <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-white shadow-lg">
+                <AvatarImage src={aprilAvatar} alt="April" className="object-cover" />
+                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-lg">
+                  A
+                </AvatarFallback>
+              </Avatar>
+              <h3 className="text-xl font-semibold text-foreground mb-2">April</h3>
+              <p className="text-muted-foreground">Your Aircare virtual assistant.</p>
             </div>
           )}
           {messages.map((message) => (
