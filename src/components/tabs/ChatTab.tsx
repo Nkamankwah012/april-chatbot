@@ -65,12 +65,14 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     setIsLoading(true);
 
     try {
-      // Set or start conversation with Botpress
+      // Use Botpress programmatically (widget remains hidden)
       if (sessionId && !botpressService.getConversationId()) {
         botpressService.setConversationId(sessionId);
       }
 
+      console.log('Sending message through hidden Botpress API:', message);
       const botResponseText = await botpressService.sendMessage(message);
+      console.log('Received response from Botpress API:', botResponseText);
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),

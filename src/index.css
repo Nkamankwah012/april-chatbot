@@ -307,23 +307,36 @@
 }
 
 /* Completely hide Botpress widget */
-#bp-web-widget { 
-  display: none !important; 
-}
-
-.bp-widget-web { 
-  display: none !important; 
-}
-
-/* Hide any other Botpress widget containers */
-[data-testid="botpress-webchat"] {
+/* Completely hide ALL Botpress widget elements - comprehensive selectors */
+#bp-web-widget,
+.bp-widget-web,
+[data-testid="botpress-webchat"],
+#botpress-webchat,
+.botpress-widget,
+.bp-widget,
+.bp-webchat,
+.bp-chat-widget,
+.bp-conversation,
+.bp-launcher,
+.bp-floating-button,
+.bp-chat-bubble,
+.bp-widget-container,
+[id*="botpress"],
+[class*="botpress"],
+[data-cy*="botpress"],
+[data-testid*="botpress"],
+[id*="bp-"],
+[class*="bp-"],
+iframe[src*="botpress"],
+iframe[src*="webchat"] {
   display: none !important;
-}
-
-#botpress-webchat {
-  display: none !important;
-}
-
-.botpress-widget {
-  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  z-index: -9999 !important;
+  pointer-events: none !important;
 }
