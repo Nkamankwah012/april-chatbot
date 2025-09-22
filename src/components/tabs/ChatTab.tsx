@@ -27,7 +27,35 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
   const [sessionId, setSessionId] = useState<string>("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  // Add bot message to chat
+  const addBotMessage = (text: string) => {
+    const botMessage: Message = {
+      id: Date.now().toString() + '-bot',
+      text: text,
+      isUser: false,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, botMessage]);
+  };
+
   useEffect(() => {
+    // Set up Botpress message listener
+    const setupBotpressListener = () => {
+      if (window.botpress && window.botpress.on) {
+        window.botpress.on('webchat:message', (message: any) => {
+          if (message.direction === 'incoming') {
+            addBotMessage(message.text);
+          }
+        });
+      }
+    };
+
+    // Try to setup listener immediately, or wait for Botpress to load
+    setupBotpressListener();
+    
+    // Also try again after a delay in case Botpress isn't ready yet
+    const timeout = setTimeout(setupBotpressListener, 1000);
+    
     // Load previous conversation if requested
     if (shouldLoadPrevious) {
       const previousConversation = conversationStorage.getUserConversation();
@@ -47,6 +75,10 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
         setTimeout(() => sendMessage(initialMessage), 100);
       }
     }
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [initialMessage, shouldLoadPrevious]);
 
   const sendMessage = async (message: string) => {
@@ -67,7 +99,7 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     try {
       console.log('Sending message directly to Botpress:', message);
       if (window && (window as any).botpress && (window as any).botpress.webchat && (window as any).botpress.webchat.sendMessage) {
-        (window as any).botpress.webchat.sendMessage(message);
+        window.botpress.webchat.sendEvent({ type: 'MESSAGE', payload: { text: message } });
       } else {
         console.warn('Botpress webchat not ready yet');
       }
