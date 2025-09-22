@@ -18,11 +18,24 @@
     
     <!-- Hide the Botpress widget with CSS -->
     <style>
-      #bp-webchat, #bp-web-widget, .bp-widget-web, .bpw-widget-btn, [id*="botpress"] { 
-        display: none !important; 
-        visibility: hidden !important; 
-        height: 0 !important;
-        width: 0 !important;
+      #bp-web-widget,
+      #bp-web-widget-container,
+      #bp-widget,
+      .bp-widget-web,
+      div[id*="botpress"],
+      div[class*="botpress"],
+      iframe[id*="botpress"],
+      iframe[name*="botpress"],
+      iframe[title*="botpress"] {
+          display: none !important;
+          visibility: hidden !important;
+          position: fixed !important;
+          left: -9999px !important;
+          top: -9999px !important;
+          width: 0 !important;
+          height: 0 !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
       }
     </style>
 
