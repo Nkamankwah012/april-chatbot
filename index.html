@@ -88,9 +88,7 @@
               window.sendMessageToBotpress = (text) => {
                 console.log('Sending message to Botpress v3.3:', text);
                 try {
-                  if (window.botpress && window.botpress.sendMessage) {
-                    window.botpress.sendMessage({ text: text });
-                  } else if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
+                  if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
                     window.botpress.webchat.sendMessage(text);
                   } else if (window.botpress.webchat && window.botpress.webchat.sendEvent) {
                     window.botpress.webchat.sendEvent({ 
