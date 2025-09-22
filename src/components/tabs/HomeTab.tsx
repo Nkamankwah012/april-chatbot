@@ -128,6 +128,12 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
               </div>
             </div>
           </div>
+        <button 
+          onClick={() => window.open('tel:408-317-2950', '_self')}
+          className="gradient-button text-sm px-4 py-2"
+        >
+          Contact Support
+        </button>
         </div>
       </div>
     </div>
