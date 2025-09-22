@@ -18,24 +18,25 @@
     
     <!-- Hide the Botpress widget with CSS -->
     <style>
+      /* Nuclear option - hide EVERYTHING Botpress */
       #bp-web-widget,
-      #bp-web-widget-container,
-      #bp-widget,
+      #bp-webchat,
       .bp-widget-web,
-      div[id*="botpress"],
-      div[class*="botpress"],
-      iframe[id*="botpress"],
-      iframe[name*="botpress"],
-      iframe[title*="botpress"] {
+      iframe[src*="botpress"],
+      iframe[src*="bpcontent"],
+      div[class*="bp-"],
+      div[id*="bp-"],
+      [class*="bpw-"],
+      [id*="bpw-"] {
           display: none !important;
           visibility: hidden !important;
-          position: fixed !important;
-          left: -9999px !important;
-          top: -9999px !important;
+          position: absolute !important;
+          left: -99999px !important;
           width: 0 !important;
           height: 0 !important;
           opacity: 0 !important;
           pointer-events: none !important;
+          z-index: -99999 !important;
       }
     </style>
 
