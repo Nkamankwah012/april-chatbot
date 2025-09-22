@@ -15,17 +15,15 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <!-- Botpress Webchat SDK -->
-    <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
+    <!-- Botpress Webchat SDK v3.3 -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js" defer></script>
     <script>
-      window.botpressWebChat.init({
-        "botId": "4bc55b81-20c1-4907-95e8-b4eb5cc763ab",
-        "hostUrl": "https://cdn.botpress.cloud/webchat/v1",
-        "messagingUrl": "https://messaging.botpress.cloud",
-        "clientId": "4bc55b81-20c1-4907-95e8-b4eb5cc763ab",
-        "hideWidget": true,
-        "config": {
-          "enableConversationDeletion": true
+      window.addEventListener('DOMContentLoaded', function() {
+        if (window.botpressWebChat) {
+          window.botpressWebChat.mergeConfig({
+            hideWidget: true
+          });
         }
       });
     </script>

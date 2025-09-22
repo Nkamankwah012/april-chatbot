@@ -1,11 +1,12 @@
-// Declare botpressWebChat on window object
+// Declare botpressWebChat on window object for v3.3
 declare global {
   interface Window {
     botpressWebChat: {
-      init: (config: any) => void;
-      sendEvent: (event: any) => void;
-      onEvent: (callback: (event: any) => void, events?: string[]) => void;
+      sendEvent: (event: any) => Promise<any>;
+      onEvent: (callback: (event: any) => void, options?: any) => void;
       mergeConfig: (config: any) => void;
+      show: () => void;
+      hide: () => void;
     };
   }
 }
@@ -13,6 +14,7 @@ declare global {
 class BotpressService {
   private conversationId: string | null = null
   private isInitialized: boolean = false
+  private messageHandlers: Array<(message: string) => void> = []
 
   constructor() {
     this.initializeWebchat();
@@ -24,12 +26,19 @@ class BotpressService {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    // Listen for messages from the bot
+    // Ensure widget is hidden
+    window.botpressWebChat.mergeConfig({
+      hideWidget: true
+    });
+    
+    // Listen for bot messages
     window.botpressWebChat.onEvent((event: any) => {
-      if (event.type === 'messageSent' && event.userId !== 'user') {
-        // Handle bot messages if needed
+      if (event.type === 'message' && !event.user) {
+        // This is a bot message
+        const messageText = event.payload?.text || event.text || "I received your message!";
+        this.messageHandlers.forEach(handler => handler(messageText));
       }
-    }, ['messageSent']);
+    });
     
     this.isInitialized = true;
   }
@@ -59,23 +68,29 @@ class BotpressService {
     return new Promise((resolve, reject) => {
       let responseReceived = false;
       
-      // Set up event listener for the bot's response
-      const handleMessage = (event: any) => {
-        if (event.type === 'messageSent' && event.userId !== 'user' && !responseReceived) {
+      // Add temporary message handler for this specific message
+      const handleResponse = (messageText: string) => {
+        if (!responseReceived) {
           responseReceived = true;
-          resolve(event.payload?.text || "I received your message!");
+          // Remove this handler
+          this.messageHandlers = this.messageHandlers.filter(h => h !== handleResponse);
+          resolve(messageText);
         }
       };
       
-      window.botpressWebChat.onEvent(handleMessage, ['messageSent']);
+      this.messageHandlers.push(handleResponse);
       
-      // Send the message
+      // Send the message using v3.3 API
       window.botpressWebChat.sendEvent({
-        type: 'messageSent',
-        userId: 'user',
+        type: 'text',
         payload: {
-          type: 'text',
           text: text
+        }
+      }).catch((error) => {
+        if (!responseReceived) {
+          responseReceived = true;
+          this.messageHandlers = this.messageHandlers.filter(h => h !== handleResponse);
+          resolve("I received your message!");
         }
       });
       
@@ -83,6 +98,7 @@ class BotpressService {
       setTimeout(() => {
         if (!responseReceived) {
           responseReceived = true;
+          this.messageHandlers = this.messageHandlers.filter(h => h !== handleResponse);
           resolve("I received your message!");
         }
       }, 10000);
