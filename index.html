@@ -59,6 +59,11 @@
             clearInterval(checkBotpress);
             console.log('Botpress API is ready');
             
+            // Initialize Botpress before using it
+            window.botpress.init({
+              host: "https://cdn.botpress.cloud"
+            });
+            
             // Hide the widget if configure method exists
             if (window.botpress.webchat && window.botpress.webchat.configure) {
               window.botpress.webchat.configure({ showWidget: false });
