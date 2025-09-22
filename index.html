@@ -22,6 +22,8 @@
       #bp-web-widget,
       #bp-webchat,
       .bp-widget-web,
+      .bpFabWrapper,
+      iframe.bpFab,
       iframe[src*="botpress"],
       iframe[src*="bpcontent"],
       div[class*="bp-"],
@@ -42,7 +44,7 @@
 
     <!-- Botpress Webchat SDK v3.3 -->
     <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-JARJATWQ.js"></script>
 
     <!-- Wait for Botpress to be ready and initialize -->
     <script>
@@ -61,33 +63,56 @@
             
             // Initialize Botpress before using it
             window.botpress.init({
+              botId: "4bc55b81-20c1-4907-95e8-b4eb5cc763ab",
+              clientId: "7a37af73-17ed-43ef-895a-1d77238c02e7",
               host: "https://cdn.botpress.cloud"
             });
             
-            // Hide the widget if configure method exists
-            if (window.botpress.webchat && window.botpress.webchat.configure) {
-              window.botpress.webchat.configure({ showWidget: false });
+            // Hide the widget completely
+            setTimeout(() => {
+              const fabWrapper = document.querySelector('.bpFabWrapper');
+              const fabIframe = document.querySelector('iframe.bpFab');
+              if (fabWrapper) fabWrapper.style.display = 'none';
+              if (fabIframe) fabIframe.style.display = 'none';
+            }, 1000);
+            
+            // Configure webchat to be hidden
+            if (window.botpress.webchat) {
+              if (window.botpress.webchat.configure) {
+                window.botpress.webchat.configure({ 
+                  showWidget: false,
+                  hideWidget: true
+                });
+              }
             }
             
             // Send messages using direct botpress API:
             window.sendMessageToBotpress = (text) => {
               console.log('Sending message to Botpress:', text);
-              if (window.botpress.sendMessage) {
-                window.botpress.sendMessage(text);
-              } else if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
-                window.botpress.webchat.sendMessage(text);
+              if (window.botpress.webchat && window.botpress.webchat.sendEvent) {
+                window.botpress.webchat.sendEvent({ 
+                  type: 'text', 
+                  text: text 
+                });
+              } else if (window.botpress.sendMessage) {
+                window.botpress.sendMessage({ text: text });
               }
             };
             
-            // Listen for responses using MESSAGE.RECEIVED:
+            // Listen for responses
             if (window.botpress.on) {
-              window.botpress.on('MESSAGE.RECEIVED', (msg) => {
+              window.botpress.on('message', (msg) => {
                 console.log('Received message from Botpress:', msg);
-                if (msg.type === 'text' || msg.text) {
+                if ((msg.type === 'text' || msg.text) && window.botpressMessageHandler) {
+                  window.botpressMessageHandler(msg.text || msg.payload?.text);
+                }
+              });
+              
+              window.botpress.on('MESSAGE.RECEIVED', (msg) => {
+                console.log('Received MESSAGE.RECEIVED from Botpress:', msg);
+                if ((msg.type === 'text' || msg.text) && window.botpressMessageHandler) {
                   // Display bot message in UI
-                  if (window.botpressMessageHandler) {
-                    window.botpressMessageHandler(msg.text || msg.payload?.text);
-                  }
+                  window.botpressMessageHandler(msg.text || msg.payload?.text);
                 }
               });
             }
@@ -97,7 +122,7 @@
             
             // Send messages using botpressWebChat:
             window.sendMessageToBotpress = (text) => {
-              console.log('Received message from Botpress:', msg);
+              console.log('Sending message via botpressWebChat:', text);
               window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
             };
             
