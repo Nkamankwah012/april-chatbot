@@ -6,7 +6,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-avatar-new.jpg";
 import { conversationStorage } from "@/lib/conversationStorage";
-import { botpressService } from "../../services/botpressService";
 
 interface Message {
   id: string;
@@ -64,40 +63,15 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     setInputMessage("");
     setIsLoading(true);
 
+    // Direct window.botpress call
     try {
-      // Use Botpress programmatically (widget remains hidden)
-      if (sessionId && !botpressService.getConversationId()) {
-        botpressService.setConversationId(sessionId);
-      }
-
-      console.log('Sending message through hidden Botpress API:', message);
-      const botResponseText = await botpressService.sendMessage(message);
-      console.log('Received response from Botpress API:', botResponseText);
-
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: botResponseText,
-        isUser: false,
-        timestamp: new Date()
-      };
-
-      const updatedMessages = [...messages, userMessage, botMessage];
-      setMessages(updatedMessages);
-      
-      // Save conversation to storage
-      conversationStorage.saveUserConversation(sessionId, updatedMessages);
+      console.log('Sending message directly to Botpress:', message);
+      (window as any).botpress.webchat.sendMessage(message);
     } catch (error) {
       console.error('Failed to send message:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "Hi! I'm April, your AirCare virtual assistant. I'm here to help with your HVAC questions, book diagnostics, and provide support. How can I assist you today?",
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
     }
+    
+    setIsLoading(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
