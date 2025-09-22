@@ -54,24 +54,51 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         const checkBotpress = setInterval(() => {
-          if (window.botpress && window.botpress.webchat) {
+          if (window.botpress) {
             clearInterval(checkBotpress);
-            console.log('Botpress is ready');
+            console.log('Botpress API is ready');
             
-            // Hide the widget
-            window.botpress.webchat.configure({ showWidget: false });
+            // Hide the widget if configure method exists
+            if (window.botpress.webchat && window.botpress.webchat.configure) {
+              window.botpress.webchat.configure({ showWidget: false });
+            }
             
-            // Send messages using:
+            // Send messages using direct botpress API:
             window.sendMessageToBotpress = (text) => {
               console.log('Sending message to Botpress:', text);
-              window.botpress.webchat.sendMessage(text);
+              if (window.botpress.sendMessage) {
+                window.botpress.sendMessage(text);
+              } else if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
+                window.botpress.webchat.sendMessage(text);
+              }
             };
             
-            // Listen for responses:
-            window.botpress.on('message', (msg) => {
+            // Listen for responses using MESSAGE.RECEIVED:
+            if (window.botpress.on) {
+              window.botpress.on('MESSAGE.RECEIVED', (msg) => {
+                console.log('Received message from Botpress:', msg);
+                if (msg.type === 'text' || msg.text) {
+                  // Display bot message in UI
+                  if (window.botpressMessageHandler) {
+                    window.botpressMessageHandler(msg.text || msg.payload?.text);
+                  }
+                }
+              });
+            }
+          } else if (window.botpressWebChat) {
+            clearInterval(checkBotpress);
+            console.log('BotpressWebChat API is ready');
+            
+            // Send messages using botpressWebChat:
+            window.sendMessageToBotpress = (text) => {
               console.log('Received message from Botpress:', msg);
-              if (msg.type === 'text' && msg.direction === 'in') {
-                // Display bot message in UI
+              window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
+            };
+            
+            // Listen for responses using onEvent:
+            window.botpressWebChat.onEvent((msg) => {
+              console.log('Received message from Botpress:', msg);
+              if (msg.type === 'MESSAGE' && msg.text) {
                 if (window.botpressMessageHandler) {
                   window.botpressMessageHandler(msg.text);
                 }
