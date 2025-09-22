@@ -63,10 +63,14 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     setInputMessage("");
     setIsLoading(true);
 
-    // Direct window.botpress call
+    // Direct window.botpress call with null checks
     try {
       console.log('Sending message directly to Botpress:', message);
-      (window as any).botpress.webchat.sendMessage(message);
+      if (window && (window as any).botpress && (window as any).botpress.webchat && (window as any).botpress.webchat.sendMessage) {
+        (window as any).botpress.webchat.sendMessage(message);
+      } else {
+        console.warn('Botpress webchat not ready yet');
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
     }
