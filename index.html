@@ -78,8 +78,10 @@
       // Force conversation start when ready
       window.botpress.on('webchat:ready', function() {
         console.log('Botpress webchat ready');
-        window.botpress.webchat.sendEvent({ type: 'show' });
-        window.botpress.webchat.createConversation();
+        if (window.botpress && window.botpress.webchat) {
+          window.botpress.webchat.sendEvent({ type: 'show' });
+          window.botpress.webchat.createConversation();
+        }
       });
 
       // Listen for bot messages
@@ -92,13 +94,15 @@
       });
 
       // Force conversation to start after webchat is ready
-      window.botpress.webchat.sendEvent({ type: 'PROACTIVE-TRIGGER' });
-      
-      // Send initial hidden message to wake up the bot
-      window.botpress.webchat.sendEvent({ 
-        type: 'MESSAGE', 
-        payload: { text: 'start' } 
-      });
+      if (window.botpress && window.botpress.webchat) {
+        window.botpress.webchat.sendEvent({ type: 'PROACTIVE-TRIGGER' });
+        
+        // Send initial hidden message to wake up the bot
+        window.botpress.webchat.sendEvent({ 
+          type: 'MESSAGE', 
+          payload: { text: 'start' } 
+        });
+      }
 
       console.log('Botpress integration initialized');
     });
