@@ -96,7 +96,7 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble responding right now. Please try again.",
+        text: "Hi! I'm April, your AirCare virtual assistant. I'm here to help with your HVAC questions, book diagnostics, and provide support. How can I assist you today?",
         isUser: false,
         timestamp: new Date()
       };

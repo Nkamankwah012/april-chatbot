@@ -20,29 +20,10 @@
     <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
-        // Aggressive widget hiding - multiple strategies
+        // Enhanced widget hiding with initialization support
         const hideWidget = () => {
-          if (window.botpressWebChat) {
-            // Configure widget to be completely hidden
-            window.botpressWebChat.mergeConfig({
-              hideWidget: true,
-              disableAnimations: true,
-              showConversationsButton: false,
-              showTimestamp: false,
-              enableReset: false,
-              enableTranscriptDownload: false,
-              showPoweredBy: false,
-              enableFileUpload: false,
-              enableEmojiPicker: false,
-              enableVoiceComposer: false,
-              stylesheet: 'data:text/css;base64,KiB7IGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDsgfQ=='
-            });
-            
-            // Force hide widget immediately
-            if (typeof window.botpressWebChat.hide === 'function') {
-              window.botpressWebChat.hide();
-            }
-            
+          // Wait for Botpress service to handle initialization
+          setTimeout(() => {
             // Comprehensive selector list for all possible Botpress elements
             const selectors = [
               '#bp-web-widget', '.bp-widget-web', '[data-testid="botpress-webchat"]',
@@ -77,9 +58,7 @@
             });
             
             console.log('Botpress widget completely hidden and disabled');
-          } else {
-            setTimeout(hideWidget, 100);
-          }
+          }, 500);
         };
         
         hideWidget();
