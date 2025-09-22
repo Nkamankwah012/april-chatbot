@@ -36,10 +36,20 @@ class BotpressService {
   }
 
   private async waitForInitialization() {
-    // Wait for the global functions to be available
-    while (!window.sendMessageToBotpress || !window.displayBotMessage) {
+    // Wait for the global functions to be available with longer timeout
+    let attempts = 0;
+    const maxAttempts = 100; // 10 seconds total
+    
+    while ((!window.sendMessageToBotpress || !window.displayBotMessage) && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
     }
+    
+    if (attempts >= maxAttempts) {
+      console.error('Botpress functions not available after timeout');
+      return;
+    }
+    
     console.log('Botpress service ready');
     this.isReady = true;
   }
@@ -67,6 +77,12 @@ class BotpressService {
   // Send user messages using the global function
   async sendMessage(userText: string): Promise<string> {
     await this.ensureInitialized();
+    
+    // Double-check that the function is available
+    if (!window.sendMessageToBotpress) {
+      console.error('window.sendMessageToBotpress is not available');
+      return "I'm having trouble connecting right now. Please try again in a moment.";
+    }
     
     if (!this.conversationId) {
       await this.startConversation();
