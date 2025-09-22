@@ -6,7 +6,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-avatar-new.jpg";
 import { conversationStorage } from "@/lib/conversationStorage";
-import { botpressService } from "@/services/botpressService";
 
 interface Message {
   id: string;
@@ -84,14 +83,8 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       const updatedMessages = [...messages, userMessage, botMessage];
       setMessages(updatedMessages);
       
-      // Update session ID if new conversation was created
-      const currentConversationId = botpressService.getConversationId();
-      if (currentConversationId && currentConversationId !== sessionId) {
-        setSessionId(currentConversationId);
-      }
-      
       // Save conversation to storage
-      conversationStorage.saveUserConversation(currentConversationId || sessionId, updatedMessages);
+      conversationStorage.saveUserConversation(sessionId, updatedMessages);
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {

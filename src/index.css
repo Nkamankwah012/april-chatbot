@@ -309,6 +309,8 @@
 /* Completely hide Botpress widget */
 /* Completely hide ALL Botpress widget elements - comprehensive selectors */
 #bp-web-widget,
+#bp-webchat,
+.bpw-widget-btn,
 .bp-widget-web,
 [data-testid="botpress-webchat"],
 #botpress-webchat,

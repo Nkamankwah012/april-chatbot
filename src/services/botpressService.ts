@@ -1,15 +1,18 @@
-// Declare botpressWebChat on window object for v3.3
+// Updated Botpress Service for v3.3 API with global integration
 declare global {
   interface Window {
-    botpressWebChat: {
+    botpress: {
       init: (config: any) => void;
-      sendEvent: (event: any) => Promise<any>;
-      onEvent: (callback: (event: any) => void, options?: any) => void;
-      onReady: (callback: () => void) => void;
-      mergeConfig: (config: any) => void;
-      show: () => void;
-      hide: () => void;
+      on: (event: string, callback: (data: any) => void) => void;
+      webchat: {
+        sendEvent: (event: any) => Promise<any>;
+        sendMessage: (text: string) => void;
+        createConversation: () => void;
+      };
     };
+    sendMessageToBotpress: (text: string) => void;
+    displayBotMessage: (text: string) => void;
+    botpressMessageHandler: (text: string) => void;
   }
 }
 
@@ -20,60 +23,25 @@ class BotpressService {
   private isReady: boolean = false
 
   constructor() {
-    this.initializeWebchat();
-    this.setupMessageListener();
+    this.setupMessageHandler();
+    this.waitForInitialization();
   }
 
-  private async initializeWebchat() {
-    // Wait for botpressWebChat to be available
-    while (!window.botpressWebChat) {
+  private setupMessageHandler() {
+    // Set up the global message handler that will be called from index.html
+    window.botpressMessageHandler = (messageText: string) => {
+      console.log('Received message from Botpress via global handler:', messageText);
+      this.displayBotMessage(messageText);
+    };
+  }
+
+  private async waitForInitialization() {
+    // Wait for the global functions to be available
+    while (!window.sendMessageToBotpress || !window.displayBotMessage) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
-    // Initialize Botpress (keep existing config)
-    window.botpressWebChat.init({
-      // your existing config
-      hideWidget: true,
-      disableAnimations: true,
-      showConversationsButton: false,
-      showTimestamp: false,
-      enableReset: false,
-      enableTranscriptDownload: false,
-      showPoweredBy: false,
-      enableFileUpload: false,
-      enableEmojiPicker: false,
-      enableVoiceComposer: false,
-      enablePersistHistory: false,
-      enableArrowNavigation: false,
-      enableConversationDeletion: false,
-      stylesheet: 'data:text/css;base64,KiB7IGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDsgfQ=='
-    });
-
-    // Open the hidden chat session immediately
-    window.botpressWebChat.onReady(() => {
-      console.log('Botpress is ready');
-      this.isReady = true;
-      window.botpressWebChat.sendEvent({ type: 'show' });
-      
-      // Force hide the widget even after initialization
-      if (typeof window.botpressWebChat.hide === 'function') {
-        setTimeout(() => window.botpressWebChat.hide(), 100);
-        setTimeout(() => window.botpressWebChat.hide(), 500);
-        setTimeout(() => window.botpressWebChat.hide(), 1000);
-      }
-    });
-    
-    this.isInitialized = true;
-  }
-
-  private setupMessageListener() {
-    // Listen for messages from Botpress
-    window.addEventListener('message', (event) => {
-      if (event.data.type === 'MESSAGE' && event.data.from === 'bot') {
-        // Display bot message in your custom UI
-        this.displayBotMessage(event.data.text);
-      }
-    });
+    console.log('Botpress service ready');
+    this.isReady = true;
   }
 
   private displayBotMessage(text: string) {
@@ -91,12 +59,12 @@ class BotpressService {
   }
 
   private async ensureInitialized() {
-    while (!this.isInitialized || !this.isReady) {
+    while (!this.isReady) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
-  // Send user messages
+  // Send user messages using the global function
   async sendMessage(userText: string): Promise<string> {
     await this.ensureInitialized();
     
@@ -104,7 +72,7 @@ class BotpressService {
       await this.startConversation();
     }
     
-    console.log('Sending message to Botpress:', userText);
+    console.log('Sending message via global function:', userText);
     
     return new Promise((resolve, reject) => {
       let responseReceived = false;
@@ -121,18 +89,17 @@ class BotpressService {
       
       this.messageHandlers.push(handleResponse);
       
-      // Send the message using the new approach
-      window.botpressWebChat.sendEvent({ 
-        type: 'MESSAGE', 
-        text: userText 
-      }).catch((error) => {
+      try {
+        // Use the global function to send message
+        window.sendMessageToBotpress(userText);
+      } catch (error) {
         console.error('Error sending message:', error);
         if (!responseReceived) {
           responseReceived = true;
           this.messageHandlers = this.messageHandlers.filter(h => h !== handleResponse);
-          resolve("I received your message! How can I help you with your HVAC system?");
+          resolve("Hi! I'm April, your AirCare virtual assistant. I'm here to help with your HVAC questions, book diagnostics, and provide support. How can I assist you today?");
         }
-      });
+      }
       
       // Set a timeout to avoid hanging
       setTimeout(() => {
