@@ -94,6 +94,25 @@
       console.log('Botpress integration initialized');
     });
     </script>
+
+    <!-- Force conversation initialization -->
+    <script>
+    // After window loads
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (window.botpress) {
+          // Force conversation to start
+          window.botpress.webchat.sendEvent({ type: 'PROACTIVE-TRIGGER' });
+          
+          // Send initial hidden message to wake up the bot
+          window.botpress.webchat.sendEvent({ 
+            type: 'MESSAGE', 
+            payload: { text: 'start' } 
+          });
+        }
+      }, 1000);
+    });
+    </script>
   </head>
 
   <body>
