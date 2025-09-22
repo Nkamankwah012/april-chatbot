@@ -70,17 +70,11 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
         botpressService.setConversationId(sessionId);
       }
 
-      const response = await botpressService.sendMessage(message);
-      
-      // Get the bot's response from the conversation
-      const botMessages = await botpressService.getMessages();
-      const latestBotMessage = botMessages.messages
-        ?.filter((msg: any) => msg.payload?.text && msg.userId !== 'user')
-        ?.pop();
+      const botResponseText = await botpressService.sendMessage(message);
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: latestBotMessage?.payload?.text || "I received your message!",
+        text: botResponseText,
         isUser: false,
         timestamp: new Date()
       };
