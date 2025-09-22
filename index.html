@@ -30,9 +30,8 @@
     <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js" defer></script>
 
-    <!-- Wait for scripts to load, then initialize -->
+    <!-- Define global functions immediately after SDK -->
     <script>
-    window.addEventListener('load', function() {
       // Function to display bot messages in custom UI
       window.displayBotMessage = function(text) {
         // Trigger the message handler if available
@@ -41,6 +40,20 @@
         }
       };
 
+      // Function to send user messages with null checks
+      window.sendMessageToBotpress = function(text) {
+        console.log('Sending message to Botpress:', text);
+        if (window.botpress && window.botpress.webchat && window.botpress.webchat.sendMessage) {
+          window.botpress.webchat.sendMessage(text);
+        } else {
+          console.warn('Botpress webchat not ready yet');
+        }
+      };
+    </script>
+
+    <!-- Wait for scripts to load, then initialize -->
+    <script>
+    window.addEventListener('load', function() {
       // Initialize with your config
       window.botpress.init({
         botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
@@ -64,12 +77,6 @@
           window.displayBotMessage(message.text);
         }
       });
-
-      // Function to send user messages
-      window.sendMessageToBotpress = function(text) {
-        console.log('Sending message to Botpress:', text);
-        window.botpress.webchat.sendMessage(text);
-      };
 
       console.log('Botpress integration initialized');
     });
