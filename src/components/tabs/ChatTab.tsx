@@ -39,22 +39,11 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
   };
 
   useEffect(() => {
-    // Set up Botpress message listener
-    const setupBotpressListener = () => {
-      if (window.botpress && window.botpress.on) {
-        window.botpress.on('webchat:message', (message: any) => {
-          if (message.direction === 'incoming') {
-            addBotMessage(message.text);
-          }
-        });
-      }
+    // Set up the global message handler to receive bot messages
+    window.botpressMessageHandler = (messageText: string) => {
+      console.log('Received message from Botpress:', messageText);
+      addBotMessage(messageText);
     };
-
-    // Try to setup listener immediately, or wait for Botpress to load
-    setupBotpressListener();
-    
-    // Also try again after a delay in case Botpress isn't ready yet
-    const timeout = setTimeout(setupBotpressListener, 1000);
     
     // Load previous conversation if requested
     if (shouldLoadPrevious) {
@@ -76,8 +65,9 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       }
     }
 
+    // Cleanup
     return () => {
-      clearTimeout(timeout);
+      window.botpressMessageHandler = undefined;
     };
   }, [initialMessage, shouldLoadPrevious]);
 
@@ -92,22 +82,37 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
     };
 
     setMessages(prev => [...prev, userMessage]);
+    
+    // Save conversation after adding user message
+    const updatedMessages = [...messages, userMessage];
+    conversationStorage.saveUserConversation(sessionId, updatedMessages);
+    
     setInputMessage("");
     setIsLoading(true);
 
-    // Direct window.botpress call with null checks
+    // Use the global function set up in HTML
     try {
       console.log('Sending message directly to Botpress:', message);
-      if (window && (window as any).botpress && (window as any).botpress.webchat && (window as any).botpress.webchat.sendMessage) {
-        window.botpress.webchat.sendEvent({ type: 'MESSAGE', payload: { text: message } });
+      if (window.sendMessageToBotpress) {
+        window.sendMessageToBotpress(message);
       } else {
-        console.warn('Botpress webchat not ready yet');
+        console.warn('sendMessageToBotpress function not available');
+        // Add fallback response
+        setTimeout(() => {
+          addBotMessage("I'm having trouble connecting right now. Please try again in a moment.");
+          setIsLoading(false);
+        }, 1000);
+        return;
       }
     } catch (error) {
       console.error('Failed to send message:', error);
+      addBotMessage("Sorry, I encountered an error. Please try again.");
     }
     
-    setIsLoading(false);
+    // Set loading to false after a delay if no response received
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
