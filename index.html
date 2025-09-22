@@ -47,7 +47,11 @@
     <script>
       // Function to display bot messages in custom UI
       window.displayBotMessage = function(text) {
-        // Trigger the message handler if available
+        if (window.botpressMessageHandler) {
+          window.botpressMessageHandler(text);
+        }
+      };
+
       window.addEventListener('DOMContentLoaded', () => {
         const checkBotpress = setInterval(() => {
           if (window.botpress && window.botpress.webchat) {
@@ -58,7 +62,7 @@
             window.botpress.webchat.configure({ showWidget: false });
             
             // Send messages using:
-            window.sendToBotpress = (text) => {
+            window.sendMessageToBotpress = (text) => {
               console.log('Sending message to Botpress:', text);
               window.botpress.webchat.sendMessage(text);
             };
@@ -73,13 +77,6 @@
                 }
               }
             });
-            
-            // Function to display bot messages in custom UI
-            window.displayBotMessage = function(text) {
-              if (window.botpressMessageHandler) {
-                window.botpressMessageHandler(text);
-              }
-            };
           }
         }, 100);
       });
