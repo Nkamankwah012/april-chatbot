@@ -41,71 +41,48 @@
 
     <!-- Botpress Webchat SDK v3.3 -->
     <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js" defer></script>
+    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js"></script>
 
-    <!-- Define global functions immediately after SDK -->
+    <!-- Wait for Botpress to be ready and initialize -->
     <script>
       // Function to display bot messages in custom UI
       window.displayBotMessage = function(text) {
         // Trigger the message handler if available
-        if (window.botpressMessageHandler) {
-          window.botpressMessageHandler(text);
-        }
-      };
-
-      // Function to send user messages with null checks
-      window.sendMessageToBotpress = function(text) {
-        console.log('Sending message to Botpress:', text);
-        if (window.botpress && window.botpress.webchat && window.botpress.webchat.sendMessage) {
-          window.botpress.webchat.sendMessage(text);
-        } else {
-          console.warn('Botpress webchat not ready yet');
-        }
-      };
-    </script>
-
-    <!-- Wait for scripts to load, then initialize -->
-    <script>
-    window.addEventListener('load', function() {
-      // Initialize with your config
-      window.botpress.init({
-        botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
-        clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-        hideWidget: true,
-        disableAnimations: true
+      window.addEventListener('DOMContentLoaded', () => {
+        const checkBotpress = setInterval(() => {
+          if (window.botpress && window.botpress.webchat) {
+            clearInterval(checkBotpress);
+            console.log('Botpress is ready');
+            
+            // Hide the widget
+            window.botpress.webchat.configure({ showWidget: false });
+            
+            // Send messages using:
+            window.sendToBotpress = (text) => {
+              console.log('Sending message to Botpress:', text);
+              window.botpress.webchat.sendMessage(text);
+            };
+            
+            // Listen for responses:
+            window.botpress.on('message', (msg) => {
+              console.log('Received message from Botpress:', msg);
+              if (msg.type === 'text' && msg.direction === 'in') {
+                // Display bot message in UI
+                if (window.botpressMessageHandler) {
+                  window.botpressMessageHandler(msg.text);
+                }
+              }
+            });
+            
+            // Function to display bot messages in custom UI
+            window.displayBotMessage = function(text) {
+              if (window.botpressMessageHandler) {
+                window.botpressMessageHandler(text);
+              }
+            };
+          }
+        }, 100);
       });
-
-      // Force conversation start when ready
-      window.botpress.on('webchat:ready', function() {
-        console.log('Botpress webchat ready');
-        if (window.botpress && window.botpress.webchat) {
-          window.botpress.webchat.sendEvent({ type: 'show' });
-          window.botpress.webchat.createConversation();
-        }
-      });
-
-      // Listen for bot messages
-      window.botpress.on('webchat:message', function(message) {
-        console.log('Received message from Botpress:', message);
-        if (message.direction === 'incoming') {
-          // Display bot message in your UI
-          window.displayBotMessage(message.text);
-        }
-      });
-
-      // Force conversation to start after webchat is ready
-      if (window.botpress && window.botpress.webchat) {
-        window.botpress.webchat.sendEvent({ type: 'PROACTIVE-TRIGGER' });
-        
-        // Send initial hidden message to wake up the bot
-        window.botpress.webchat.sendEvent({ 
-          type: 'MESSAGE', 
-          payload: { text: 'start' } 
-        });
-      }
-
-      console.log('Botpress integration initialized');
-    });
     </script>
   </head>
 
