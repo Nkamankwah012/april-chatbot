@@ -68,53 +68,89 @@
               host: "https://cdn.botpress.cloud"
             });
             
-            // Hide the widget completely
+            // Wait for full initialization
             setTimeout(() => {
+              // Hide the widget completely
               const fabWrapper = document.querySelector('.bpFabWrapper');
               const fabIframe = document.querySelector('iframe.bpFab');
               if (fabWrapper) fabWrapper.style.display = 'none';
               if (fabIframe) fabIframe.style.display = 'none';
-            }, 1000);
-            
-            // Configure webchat to be hidden
-            if (window.botpress.webchat) {
-              if (window.botpress.webchat.configure) {
+              
+              // Configure webchat to be hidden but functional
+              if (window.botpress.webchat && window.botpress.webchat.configure) {
                 window.botpress.webchat.configure({ 
                   showWidget: false,
                   hideWidget: true
                 });
               }
-            }
-            
-            // Send messages using direct botpress API:
-            window.sendMessageToBotpress = (text) => {
-              console.log('Sending message to Botpress:', text);
-              if (window.botpress.webchat && window.botpress.webchat.sendEvent) {
-                window.botpress.webchat.sendEvent({ 
-                  type: 'text', 
-                  text: text 
-                });
-              } else if (window.botpress.sendMessage) {
-                window.botpress.sendMessage({ text: text });
-              }
-            };
-            
-            // Listen for responses
-            if (window.botpress.on) {
-              window.botpress.on('message', (msg) => {
-                console.log('Received message from Botpress:', msg);
-                if ((msg.type === 'text' || msg.text) && window.botpressMessageHandler) {
-                  window.botpressMessageHandler(msg.text || msg.payload?.text);
-                }
-              });
               
-              window.botpress.on('MESSAGE.RECEIVED', (msg) => {
-                console.log('Received MESSAGE.RECEIVED from Botpress:', msg);
-                if ((msg.type === 'text' || msg.text) && window.botpressMessageHandler) {
-                  // Display bot message in UI
-                  window.botpressMessageHandler(msg.text || msg.payload?.text);
+              // Send messages using the correct v3.3 API
+              window.sendMessageToBotpress = (text) => {
+                console.log('Sending message to Botpress v3.3:', text);
+                try {
+                  if (window.botpress && window.botpress.sendMessage) {
+                    window.botpress.sendMessage({ text: text });
+                  } else if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
+                    window.botpress.webchat.sendMessage(text);
+                  } else if (window.botpress.webchat && window.botpress.webchat.sendEvent) {
+                    window.botpress.webchat.sendEvent({ 
+                      type: 'text', 
+                      payload: { text: text }
+                    });
+                  } else {
+                    console.error('No valid send method found');
+                  }
+                } catch (error) {
+                  console.error('Error sending message:', error);
                 }
-              });
+              };
+              
+              // Listen for responses using multiple event types
+              if (window.botpress && window.botpress.on) {
+                // Listen for various message events
+                window.botpress.on('message', (msg) => {
+                  console.log('Received message event:', msg);
+                  handleBotMessage(msg);
+                });
+                
+                window.botpress.on('MESSAGE.RECEIVED', (msg) => {
+                  console.log('Received MESSAGE.RECEIVED event:', msg);
+                  handleBotMessage(msg);
+                });
+                
+                window.botpress.on('botMessage', (msg) => {
+                  console.log('Received botMessage event:', msg);
+                  handleBotMessage(msg);
+                });
+                
+                window.botpress.on('webchat:message', (msg) => {
+                  console.log('Received webchat:message event:', msg);
+                  handleBotMessage(msg);
+                });
+              }
+              
+              // Handle bot messages consistently
+              window.handleBotMessage = function(msg) {
+                console.log('Processing bot message:', msg);
+                let messageText = '';
+                
+                if (typeof msg === 'string') {
+                  messageText = msg;
+                } else if (msg.text) {
+                  messageText = msg.text;
+                } else if (msg.payload && msg.payload.text) {
+                  messageText = msg.payload.text;
+                } else if (msg.content && msg.content.text) {
+                  messageText = msg.content.text;
+                }
+                
+                if (messageText && window.botpressMessageHandler) {
+                  console.log('Displaying message:', messageText);
+                  window.botpressMessageHandler(messageText);
+                }
+              };
+              
+            }, 2000); // Wait 2 seconds for full initialization
             }
           } else if (window.botpressWebChat) {
             clearInterval(checkBotpress);
