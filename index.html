@@ -20,11 +20,30 @@
     <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
-        if (window.botpressWebChat) {
-          window.botpressWebChat.mergeConfig({
-            hideWidget: true
-          });
-        }
+        // Wait for botpress to load and immediately hide it
+        const hideWidget = () => {
+          if (window.botpressWebChat) {
+            window.botpressWebChat.mergeConfig({
+              hideWidget: true,
+              disableAnimations: true,
+              showConversationsButton: false,
+              showTimestamp: false,
+              enableReset: false
+            });
+            // Force hide any visible elements
+            const widgets = document.querySelectorAll('#bp-web-widget, .bp-widget-web, [data-testid="botpress-webchat"], #botpress-webchat, .botpress-widget');
+            widgets.forEach(widget => {
+              if (widget) {
+                widget.style.display = 'none !important';
+                widget.style.visibility = 'hidden !important';
+                widget.style.opacity = '0 !important';
+              }
+            });
+          } else {
+            setTimeout(hideWidget, 100);
+          }
+        };
+        hideWidget();
       });
     </script>
   </head>

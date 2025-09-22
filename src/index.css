@@ -305,3 +305,25 @@
            hover:scale-105 transition-[var(--transition-smooth)];
   }
 }
+
+/* Completely hide Botpress widget */
+#bp-web-widget { 
+  display: none !important; 
+}
+
+.bp-widget-web { 
+  display: none !important; 
+}
+
+/* Hide any other Botpress widget containers */
+[data-testid="botpress-webchat"] {
+  display: none !important;
+}
+
+#botpress-webchat {
+  display: none !important;
+}
+
+.botpress-widget {
+  display: none !important;
+}

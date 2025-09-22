@@ -26,10 +26,19 @@ class BotpressService {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    // Ensure widget is hidden
+    // Ensure widget is completely hidden and disabled
     window.botpressWebChat.mergeConfig({
-      hideWidget: true
+      hideWidget: true,
+      disableAnimations: true,
+      showConversationsButton: false,
+      showTimestamp: false,
+      enableReset: false,
+      enableTranscriptDownload: false,
+      showPoweredBy: false
     });
+    
+    // Force hide the widget immediately
+    window.botpressWebChat.hide();
     
     // Listen for bot messages
     window.botpressWebChat.onEvent((event: any) => {
