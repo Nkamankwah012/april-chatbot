@@ -6,6 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCw, ArrowLeft } from "lucide-react";
 import aprilAvatar from "@/assets/april-avatar-new.jpg";
 import { conversationStorage } from "@/lib/conversationStorage";
+import { botpressService } from "@/services/botpressService";
 
 interface Message {
   id: string;
