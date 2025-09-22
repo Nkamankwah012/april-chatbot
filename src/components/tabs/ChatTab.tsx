@@ -71,10 +71,6 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       } else {
         console.warn('Botpress webchat not ready yet');
       }
-        (window as any).botpress.webchat.sendMessage(message);
-      } else {
-        console.warn('Botpress webchat not ready yet');
-      }
     } catch (error) {
       console.error('Failed to send message:', error);
     }
