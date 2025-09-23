@@ -1,14 +1,9 @@
-// Updated Botpress Service for v3.3 API with global integration
+// Updated Botpress Service for programmatic webchat control
 declare global {
   interface Window {
-    botpress: {
-      init: (config: any) => void;
-      on: (event: string, callback: (data: any) => void) => void;
-      webchat: {
-        sendEvent: (event: any) => Promise<any>;
-        sendMessage: (text: string) => void;
-        createConversation: () => void;
-      };
+    botpressWebChat: {
+      sendEvent: (event: { type: string; text: string }) => void;
+      onEvent: (callback: (event: any) => void, types: string[]) => void;
     };
     sendMessageToBotpress: (text: string) => void;
     displayBotMessage: (text: string) => void;
@@ -36,21 +31,21 @@ class BotpressService {
   }
 
   private async waitForInitialization() {
-    // Wait for the global functions to be available with longer timeout
+    // Wait for BotpressWebChat API and global functions to be available
     let attempts = 0;
     const maxAttempts = 100; // 10 seconds total
     
-    while ((!window.sendMessageToBotpress || !window.displayBotMessage) && attempts < maxAttempts) {
+    while ((!window.botpressWebChat || !window.sendMessageToBotpress || !window.displayBotMessage) && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 100));
       attempts++;
     }
     
     if (attempts >= maxAttempts) {
-      console.error('Botpress functions not available after timeout');
+      console.error('Botpress WebChat API not available after timeout');
       return;
     }
     
-    console.log('Botpress service ready');
+    console.log('Botpress WebChat service ready');
     this.isReady = true;
   }
 
@@ -74,13 +69,13 @@ class BotpressService {
     }
   }
 
-  // Send user messages using the global function
+  // Send user messages using the BotpressWebChat API
   async sendMessage(userText: string): Promise<string> {
     await this.ensureInitialized();
     
-    // Double-check that the function is available
-    if (!window.sendMessageToBotpress) {
-      console.error('window.sendMessageToBotpress is not available');
+    // Double-check that the API is available
+    if (!window.botpressWebChat || !window.sendMessageToBotpress) {
+      console.error('BotpressWebChat API is not available');
       return "I'm having trouble connecting right now. Please try again in a moment.";
     }
     
@@ -88,7 +83,7 @@ class BotpressService {
       await this.startConversation();
     }
     
-    console.log('Sending message via global function:', userText);
+    console.log('Sending message via BotpressWebChat API:', userText);
     
     return new Promise((resolve, reject) => {
       let responseReceived = false;
@@ -106,7 +101,7 @@ class BotpressService {
       this.messageHandlers.push(handleResponse);
       
       try {
-        // Use the global function to send message
+        // Use the global function which calls botpressWebChat.sendEvent()
         window.sendMessageToBotpress(userText);
       } catch (error) {
         console.error('Error sending message:', error);
@@ -129,7 +124,7 @@ class BotpressService {
   }
 
   async getMessages() {
-    // With webchat SDK, we don't retrieve messages - they're handled through events
+    // With BotpressWebChat API, we don't retrieve messages - they're handled through events
     return { messages: [] };
   }
 

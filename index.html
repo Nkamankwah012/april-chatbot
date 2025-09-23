@@ -3,174 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AirCare Assistant - HVAC Support Widget</title>
-    <meta name="description" content="Get instant HVAC support with AirCare's intelligent assistant. Ask questions, book diagnostics, and get expert help." />
-    <meta name="author" content="AirCare" />
-
-    <meta property="og:title" content="AirCare Assistant - HVAC Support Widget" />
-    <meta property="og:description" content="Get instant HVAC support with AirCare's intelligent assistant. Ask questions, book diagnostics, and get expert help." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <title>AirCare HVAC Support - Virtual Assistant April</title>
+    <meta name="description" content="Get instant HVAC support with AirCare's virtual assistant April. Book diagnostics, get estimates, and receive expert help 24/7." />
+    <meta name="author" content="AirCare HVAC Services" />
+    <meta name="keywords" content="HVAC, air conditioning, heating, repair, maintenance, support, virtual assistant" />
     
-    <!-- Hide the Botpress widget with CSS -->
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="AirCare HVAC Support - Virtual Assistant April" />
+    <meta property="og:description" content="Get instant HVAC support with AirCare's virtual assistant April. Book diagnostics, get estimates, and receive expert help 24/7." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aircare-support.lovable.app" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="AirCare HVAC Support - Virtual Assistant April" />
+    <meta name="twitter:description" content="Get instant HVAC support with AirCare's virtual assistant April. Book diagnostics, get estimates, and receive expert help 24/7." />
+    
+    <!-- Botpress Webchat Scripts -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js"></script>
+    
     <style>
-      /* Nuclear option - hide EVERYTHING Botpress */
-      #bp-web-widget,
-      #bp-webchat,
-      .bp-widget-web,
-      .bpFabWrapper,
-      iframe.bpFab,
-      iframe[src*="botpress"],
-      iframe[src*="bpcontent"],
-      div[class*="bp-"],
-      div[id*="bp-"],
-      [class*="bpw-"],
-      [id*="bpw-"] {
-          display: none !important;
-          visibility: hidden !important;
-          position: absolute !important;
-          left: -99999px !important;
-          width: 0 !important;
-          height: 0 !important;
-          opacity: 0 !important;
-          pointer-events: none !important;
-          z-index: -99999 !important;
-      }
+      /* Hide the Botpress widget completely */
+      #bp-web-widget { display: none !important; }
+      .bp-widget-web { display: none !important; }
+      
+      /* Additional selectors to ensure complete hiding */
+      [id*="botpress"] { display: none !important; }
+      [class*="botpress"] { display: none !important; }
+      [id*="bp-web"] { display: none !important; }
+      [class*="bp-web"] { display: none !important; }
+      
+      /* Webchat specific selectors */
+      #botpress-webchat { display: none !important; }
+      .botpress-webchat { display: none !important; }
+      .bpw-layout { display: none !important; }
+      .bpw-widget { display: none !important; }
+      .bpw-floating-button { display: none !important; }
+      .bpw-chat-container { display: none !important; }
+      .bpw-header { display: none !important; }
+      .bpw-composer { display: none !important; }
+      .bpw-conversation { display: none !important; }
+      .bpw-typing { display: none !important; }
+      .bpw-powered { display: none !important; }
     </style>
 
-    <!-- Botpress Webchat SDK v3.3 -->
-    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-JARJATWQ.js"></script>
-
-    <!-- Wait for Botpress to be ready and initialize -->
     <script>
-      // Function to display bot messages in custom UI
-      window.displayBotMessage = function(text) {
-        if (window.botpressMessageHandler) {
-          window.botpressMessageHandler(text);
+      // Wait for Botpress WebChat to load and set up programmatic control
+      let checkBotpress = setInterval(() => {
+        if (window.botpressWebChat) {
+          clearInterval(checkBotpress);
+          console.log('BotpressWebChat API is ready');
+          
+          // Set up global functions for the React app to use
+          window.sendMessageToBotpress = function(text) {
+            console.log('Sending message to BotpressWebChat:', text);
+            try {
+              window.botpressWebChat.sendEvent({
+                type: 'MESSAGE',
+                text: text
+              });
+            } catch (error) {
+              console.error('Error sending message:', error);
+            }
+          };
+          
+          window.displayBotMessage = function(text) {
+            console.log('Displaying bot message:', text);
+            if (window.botpressMessageHandler) {
+              window.botpressMessageHandler(text);
+            }
+          };
+          
+          // Listen for bot responses
+          window.botpressWebChat.onEvent((event) => {
+            console.log('BotpressWebChat event received:', event);
+            if (event.type === 'MESSAGE.RECEIVED' && event.text && window.botpressMessageHandler) {
+              console.log('Calling message handler with:', event.text);
+              window.botpressMessageHandler(event.text);
+            }
+          }, ['MESSAGE.RECEIVED']);
+          
         }
-      };
-
-      window.addEventListener('DOMContentLoaded', () => {
-        const checkBotpress = setInterval(() => {
-          if (window.botpress) {
-            clearInterval(checkBotpress);
-            console.log('Botpress API is ready');
-            
-            // Initialize Botpress before using it
-            window.botpress.init({
-              botId: "4bc55b81-20c1-4907-95e8-b4eb5cc763ab",
-              clientId: "7a37af73-17ed-43ef-895a-1d77238c02e7",
-              host: "https://cdn.botpress.cloud"
-            });
-            
-            // Wait for full initialization
-            setTimeout(() => {
-              // Hide the widget completely
-              const fabWrapper = document.querySelector('.bpFabWrapper');
-              const fabIframe = document.querySelector('iframe.bpFab');
-              if (fabWrapper) fabWrapper.style.display = 'none';
-              if (fabIframe) fabIframe.style.display = 'none';
-              
-              // Configure webchat to be hidden but functional
-              if (window.botpress.webchat && window.botpress.webchat.configure) {
-                window.botpress.webchat.configure({ 
-                  showWidget: false,
-                  hideWidget: true
-                });
-              }
-              
-              // Send messages using the correct v3.3 API
-              window.sendMessageToBotpress = (text) => {
-                console.log('Sending message to Botpress v3.3:', text);
-                try {
-                  if (window.botpress.webchat && window.botpress.webchat.sendMessage) {
-                    window.botpress.webchat.sendMessage(text);
-                  } else if (window.botpress.webchat && window.botpress.webchat.sendEvent) {
-                    window.botpress.webchat.sendEvent({ 
-                      type: 'text', 
-                      payload: { text: text }
-                    });
-                  } else {
-                    console.error('No valid send method found');
-                  }
-                } catch (error) {
-                  console.error('Error sending message:', error);
-                }
-              };
-              
-              // Listen for responses using multiple event types
-              if (window.botpress && window.botpress.on) {
-                // Listen for various message events
-                window.botpress.on('message', (msg) => {
-                  console.log('Received message event:', msg);
-                  handleBotMessage(msg);
-                });
-                
-                window.botpress.on('MESSAGE.RECEIVED', (msg) => {
-                  console.log('Received MESSAGE.RECEIVED event:', msg);
-                  handleBotMessage(msg);
-                });
-                
-                window.botpress.on('botMessage', (msg) => {
-                  console.log('Received botMessage event:', msg);
-                  handleBotMessage(msg);
-                });
-                
-                window.botpress.on('webchat:message', (msg) => {
-                  console.log('Received webchat:message event:', msg);
-                  handleBotMessage(msg);
-                });
-              }
-              
-              // Handle bot messages consistently
-              window.handleBotMessage = function(msg) {
-                console.log('Processing bot message:', msg);
-                let messageText = '';
-                
-                if (typeof msg === 'string') {
-                  messageText = msg;
-                } else if (msg.text) {
-                  messageText = msg.text;
-                } else if (msg.payload && msg.payload.text) {
-                  messageText = msg.payload.text;
-                } else if (msg.content && msg.content.text) {
-                  messageText = msg.content.text;
-                }
-                
-                if (messageText && window.botpressMessageHandler) {
-                  console.log('Displaying message:', messageText);
-                  window.botpressMessageHandler(messageText);
-                }
-              };
-            }, 2000); // Wait 2 seconds for full initialization
-          }
-        } else if (window.botpressWebChat) {
-            clearInterval(checkBotpress);
-            console.log('BotpressWebChat API is ready');
-            
-            // Send messages using botpressWebChat:
-            window.sendMessageToBotpress = (text) => {
-              console.log('Sending message via botpressWebChat:', text);
-              window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
-            };
-            
-            // Listen for responses using onEvent:
-            window.botpressWebChat.onEvent((msg) => {
-              console.log('Received message from Botpress:', msg);
-              if (msg.type === 'MESSAGE' && msg.text) {
-                if (window.botpressMessageHandler) {
-                  window.botpressMessageHandler(msg.text);
-                }
-              }
-            });
-          }
-        }, 100);
-      });
+      }, 100);
     </script>
   </head>
 
