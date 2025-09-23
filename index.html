@@ -49,8 +49,8 @@
     </style>
 
     <script>
-      window.addEventListener('load', () => {
-        setTimeout(() => {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
           if (window.botpressWebChat) {
             window.botpressWebChat.init({
               botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
@@ -61,12 +61,12 @@
             });
             
             // Send messages from your input
-            window.sendToBotpress = (text) => {
+            window.sendToBotpress = function(text) {
               window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
             };
             
             // Listen for bot responses
-            window.botpressWebChat.onEvent((event) => {
+            window.botpressWebChat.onEvent(function(event) {
               if (event.type === 'MESSAGE.RECEIVED') {
                 // Display bot message in your UI
                 console.log('Bot said:', event.text);
