@@ -52,6 +52,7 @@
       window.addEventListener('load', function() {
         setTimeout(function() {
           if (window.botpressWebChat) {
+            console.log('Initializing Botpress WebChat...');
             window.botpressWebChat.init({
               botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
               hostUrl: 'https://cdn.botpress.cloud/webchat/v3.3',
@@ -61,20 +62,31 @@
             });
             
             // Send messages from your input
-            window.sendToBotpress = function(text) {
+            window.sendMessageToBotpress = function(text) {
+              console.log('Sending message to Botpress:', text);
               window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
+            };
+            
+            // Display bot message function
+            window.displayBotMessage = function(text) {
+              console.log('Displaying bot message:', text);
+              if (window.botpressMessageHandler) {
+                window.botpressMessageHandler(text);
+              }
             };
             
             // Listen for bot responses
             window.botpressWebChat.onEvent(function(event) {
+              console.log('Botpress event received:', event);
               if (event.type === 'MESSAGE.RECEIVED') {
-                // Display bot message in your UI
-                console.log('Bot said:', event.text);
-                if (window.botpressMessageHandler) {
-                  window.botpressMessageHandler(event.text);
-                }
+                console.log('Bot response:', event.text);
+                window.displayBotMessage(event.text);
               }
             }, ['MESSAGE.RECEIVED']);
+            
+            console.log('Botpress WebChat initialized successfully');
+          } else {
+            console.error('Botpress WebChat not available');
           }
         }, 1000);
       });

@@ -1,17 +1,7 @@
 // Updated Botpress Service for programmatic webchat control
 declare global {
   interface Window {
-    botpressWebChat: {
-      init: (config: {
-        botId: string;
-        hostUrl: string;
-        messagingUrl: string;
-        clientId: string;
-        hideWidget: boolean;
-      }) => void;
-      sendEvent: (event: { type: string; text: string }) => void;
-      onEvent: (callback: (event: any) => void, types: string[]) => void;
-    };
+    botpressWebChat: any;
     sendMessageToBotpress: (text: string) => void;
     displayBotMessage: (text: string) => void;
     botpressMessageHandler: (text: string) => void;
