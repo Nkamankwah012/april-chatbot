@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Webchat } from '@botpress/webchat';
@@ -32,8 +31,9 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       <div className="flex-1">
         <Webchat 
           clientId="7a37af73-17ed-43ef-895a-1d77238c02e7"
-          configuration={{
-            color: '#000',
+          style={{
+            width: '100%',
+            height: '100%'
           }}
         />
       </div>
