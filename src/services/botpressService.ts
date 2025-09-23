@@ -2,6 +2,13 @@
 declare global {
   interface Window {
     botpressWebChat: {
+      init: (config: {
+        botId: string;
+        hostUrl: string;
+        messagingUrl: string;
+        clientId: string;
+        hideWidget: boolean;
+      }) => void;
       sendEvent: (event: { type: string; text: string }) => void;
       onEvent: (callback: (event: any) => void, types: string[]) => void;
     };
