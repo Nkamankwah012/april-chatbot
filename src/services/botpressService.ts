@@ -9,7 +9,7 @@ declare global {
         clientId: string;
         hideWidget: boolean;
       }) => void;
-      sendEvent: (event: { type: string; text?: string }) => void;
+      sendEvent: (event: { type: string; text: string }) => void;
       onEvent: (callback: (event: any) => void, types: string[]) => void;
     };
     sendMessageToBotpress: (text: string) => void;

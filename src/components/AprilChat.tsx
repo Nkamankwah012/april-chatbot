@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export default function AprilChat() {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
@@ -33,8 +33,11 @@ export default function AprilChat() {
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
+
+    // Add user message to UI
     setMessages(prev => [...prev, { type: 'user', text: inputValue }]);
 
+    // Send to Botpress
     window.botpressWebChat?.sendEvent({
       type: 'MESSAGE',
       text: inputValue,
@@ -43,25 +46,22 @@ export default function AprilChat() {
     setInputValue('');
   };
 
-  const handleRefresh = () => {
-    setMessages([]);
-    window.botpressWebChat?.sendEvent({ type: 'RESET_SESSION' });
-  };
-
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ 
-        height: 400, 
+        height: '400px', 
         border: '1px solid #ccc', 
-        padding: 10, 
+        padding: '10px', 
         overflowY: 'auto',
-        marginBottom: 10
+        marginBottom: '10px'
       }}>
         {messages.map((msg, i) => (
           <div 
             key={i} 
             style={{ 
               textAlign: msg.type === 'user' ? 'right' : 'left',
+              margin: '5px 0',
+              fontWeight: msg.type === 'bot' ? 'bold' : 'normal',
               color: msg.type === 'bot' ? '#004080' : '#000'
             }}
           >
@@ -69,22 +69,19 @@ export default function AprilChat() {
           </div>
         ))}
       </div>
-
-      <div style={{ display: 'flex', marginBottom: 10 }}>
+      <div style={{ display: 'flex' }}>
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          style={{ flex: 1, padding: '8px', marginRight: '8px' }}
           placeholder="Type your message..."
-          style={{ flex: 1, padding: 8 }}
         />
-        <button onClick={handleSend} style={{ marginLeft: 8 }}>Send</button>
+        <button onClick={handleSend} style={{ padding: '8px 16px' }}>
+          Send
+        </button>
       </div>
-
-      <button onClick={handleRefresh} style={{ padding: 6 }}>
-        🔄 Refresh Chat
-      </button>
     </div>
   );
 }
