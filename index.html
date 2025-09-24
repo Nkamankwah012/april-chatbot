@@ -19,76 +19,51 @@
     <meta name="twitter:title" content="AirCare HVAC Support - Virtual Assistant April" />
     <meta name="twitter:description" content="Get instant HVAC support with AirCare's virtual assistant April. Book diagnostics, get estimates, and receive expert help 24/7." />
     
-    <!-- Botpress Webchat Scripts -->
-    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/09/17/20/20250917203724-Q1C6SGSN.js"></script>
-    
+    <!-- Botpress Webchat Script -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
     <style>
-      /* Hide the Botpress widget completely */
-      #bp-web-widget { display: none !important; }
-      .bp-widget-web { display: none !important; }
-      
-      /* Additional selectors to ensure complete hiding */
-      [id*="botpress"] { display: none !important; }
-      [class*="botpress"] { display: none !important; }
-      [id*="bp-web"] { display: none !important; }
-      [class*="bp-web"] { display: none !important; }
-      
-      /* Webchat specific selectors */
-      #botpress-webchat { display: none !important; }
-      .botpress-webchat { display: none !important; }
-      .bpw-layout { display: none !important; }
-      .bpw-widget { display: none !important; }
-      .bpw-floating-button { display: none !important; }
-      .bpw-chat-container { display: none !important; }
-      .bpw-header { display: none !important; }
-      .bpw-composer { display: none !important; }
-      .bpw-conversation { display: none !important; }
-      .bpw-typing { display: none !important; }
-      .bpw-powered { display: none !important; }
+      #webchat .bpWebchat {
+        position: unset;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        max-width: 100%;
+      }
+
+      #webchat .bpFab {
+        display: none;
+      }
     </style>
 
     <script>
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          if (window.botpressWebChat) {
-            console.log('Initializing Botpress WebChat...');
-            window.botpressWebChat.init({
-              botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
-              hostUrl: 'https://cdn.botpress.cloud/webchat/v3.3',
-              messagingUrl: 'https://messaging.botpress.cloud',
-              clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-              hideWidget: true
-            });
-            
-            // Send messages from your input
-            window.sendMessageToBotpress = function(text) {
-              console.log('Sending message to Botpress:', text);
-              window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: text });
-            };
-            
-            // Display bot message function
-            window.displayBotMessage = function(text) {
-              console.log('Displaying bot message:', text);
-              if (window.botpressMessageHandler) {
-                window.botpressMessageHandler(text);
-              }
-            };
-            
-            // Listen for bot responses
-            window.botpressWebChat.onEvent(function(event) {
-              console.log('Botpress event received:', event);
-              if (event.type === 'MESSAGE.RECEIVED') {
-                console.log('Bot response:', event.text);
-                window.displayBotMessage(event.text);
-              }
-            }, ['MESSAGE.RECEIVED']);
-            
-            console.log('Botpress WebChat initialized successfully');
-          } else {
-            console.error('Botpress WebChat not available');
-          }
-        }, 1000);
+      window.botpress.on("webchat:ready", () => {
+        window.botpress.open();
+      });
+      window.botpress.init({
+        "botId": "4bc55b81-20c1-4907-95e8-b4eb5cc763ab",
+        "configuration": {
+          "version": "v2",
+          "botName": "April",
+          "botAvatar": "https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg",
+          "botDescription": "How can I  help you today...",
+          "fabImage": "https://files.bpcontent.cloud/2025/09/19/21/20250919214955-ITA8SVEK.jpeg",
+          "website": {},
+          "email": {},
+          "phone": {},
+          "termsOfService": {},
+          "privacyPolicy": {},
+          "color": "#3276EA",
+          "variant": "solid",
+          "headerVariant": "glass",
+          "themeMode": "light",
+          "fontFamily": "inter",
+          "radius": 4,
+          "feedbackEnabled": true,
+          "footer": "[⚡ by Botpress](https://botpress.com/?from=webchat)",
+          "soundEnabled": true
+        },
+        "clientId": "7a37af73-17ed-43ef-895a-1d77238c02e7",
+        "selector": "#webchat"
       });
     </script>
   </head>
