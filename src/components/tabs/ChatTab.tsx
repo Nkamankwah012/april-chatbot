@@ -14,6 +14,7 @@ declare global {
     botpressWebChat: any;
     sendMessageToBotpress: (text: string) => void;
     botpressMessageHandler: (text: string) => void;
+    botpress?: any;
   }
 }
 
@@ -47,6 +48,37 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       clearInterval(checkReady);
     };
   }, [initialMessage]);
+
+  // Debug: check which Botpress APIs are available and try sending tests
+  useEffect(() => {
+    const id = setTimeout(() => {
+      try {
+        console.log('Checking Botpress objects:');
+        console.log('window.botpressWebChat:', window.botpressWebChat);
+console.log('window.botpress:', window.botpress);
+
+        if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
+          console.log('Sending test via sendEvent');
+          window.botpressWebChat.sendEvent({ type: 'MESSAGE', text: 'test1' });
+        }
+
+        // Some versions expose sendMessage
+        if (window.botpressWebChat && typeof (window.botpressWebChat as any).sendMessage === 'function') {
+          console.log('Sending test via sendMessage');
+          (window.botpressWebChat as any).sendMessage('test2');
+        }
+
+if (window.botpress && typeof window.botpress.sendMessage === 'function') {
+  console.log('Sending test via botpress.sendMessage');
+  window.botpress.sendMessage('test3');
+}
+      } catch (e) {
+        console.error('Botpress debug check failed:', e);
+      }
+    }, 3000);
+
+    return () => clearTimeout(id);
+  }, []);
 
   const handleSendMessage = (message: string) => {
     if (!message.trim() || !isReady) return;
