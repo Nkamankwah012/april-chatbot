@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -9,6 +9,47 @@ interface ChatTabProps {
 }
 
 export const ChatTab = ({ onBackToHome }: ChatTabProps) => {
+  // Initialize Botpress after this tab mounts so the #webchat container exists
+  useEffect(() => {
+    const init = () => {
+      const bp = (window as any).botpress;
+      if (bp) {
+        bp.on('webchat:ready', () => bp.open());
+        bp.init({
+          botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
+          configuration: {
+            version: 'v2',
+            botName: 'April',
+            botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
+            botDescription: 'How can I  help you today...',
+            fabImage: 'https://files.bpcontent.cloud/2025/09/19/21/20250919214955-ITA8SVEK.jpeg',
+            website: {},
+            email: {},
+            phone: {},
+            termsOfService: {},
+            privacyPolicy: {},
+            color: '#3276EA',
+            variant: 'solid',
+            headerVariant: 'glass',
+            themeMode: 'light',
+            fontFamily: 'inter',
+            radius: 4,
+            feedbackEnabled: true,
+            footer: '[⚡ by Botpress](https://botpress.com/?from=webchat)',
+            soundEnabled: true,
+          },
+          clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
+          selector: '#webchat',
+        });
+      } else {
+        console.error('Botpress not loaded yet');
+      }
+    };
+    // Defer to ensure the container is mounted
+    const t = setTimeout(init, 0);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="h-full flex flex-col">
       {/* Header with back button */}
