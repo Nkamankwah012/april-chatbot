@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Webchat } from '@botpress/webchat';
 
 interface ChatTabProps {
   initialMessage?: string;
@@ -9,85 +10,8 @@ interface ChatTabProps {
 }
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
-  // Initialize Botpress WebChat once, and send initial messages whenever provided
-  // Initialize Botpress once on mount; don't re-init on message changes
-  useEffect(() => {
-    let mounted = true;
-    const initializedFlag = '__aircare_bpw_initialized__';
-
-    const waitForBotpress = async (timeoutMs = 20000) => {
-      const start = Date.now();
-      while (
-        mounted &&
-        !(window as any).botpressWebChat &&
-        Date.now() - start < timeoutMs
-      ) {
-        await new Promise((r) => setTimeout(r, 100));
-      }
-      return (window as any).botpressWebChat as any | undefined;
-    };
-
-    const init = async () => {
-      try {
-        // Rely on index.html script tag (already included); just wait for the global API
-        const bpw = await waitForBotpress();
-        if (!mounted || !bpw) {
-          console.error('Botpress WebChat global missing after waiting');
-          return;
-        }
-
-        // Avoid re-initializing if already done
-        if ((window as any)[initializedFlag]) return;
-
-        bpw.init({
-          botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
-          clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-          messagingUrl: 'https://messaging.botpress.cloud',
-          container: '#webchat',
-          hideWidget: true,
-          theme: 'light',
-        });
-
-        (window as any)[initializedFlag] = true;
-      } catch (e) {
-        console.error('Failed to initialize Botpress', e);
-      }
-    };
-
-    init();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Send initial messages without re-initializing
-  useEffect(() => {
-    if (!initialMessage) return;
-
-    let cancelled = false;
-    const trySend = async () => {
-      let attempts = 0;
-      while (!(window as any).botpressWebChat && attempts < 100 && !cancelled) {
-        await new Promise((r) => setTimeout(r, 100));
-        attempts++;
-      }
-      if (cancelled) return;
-      const bpw = (window as any).botpressWebChat;
-      if (!bpw) return;
-      setTimeout(() => {
-        try {
-          bpw.sendEvent({ type: 'MESSAGE', text: initialMessage });
-        } catch (e) {
-          console.error('Failed to send initial message', e);
-        }
-      }, 200);
-    };
-
-    trySend();
-    return () => {
-      cancelled = true;
-    };
-  }, [initialMessage]);
+  // Using Botpress React Webchat to avoid CDN script issues and keep chat persistent
+  // Note: initialMessage and shouldLoadPrevious are currently unused with this approach
 
   return (
     <div className="h-full flex flex-col">
@@ -106,10 +30,15 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
           </div>
         </div>
       )}
-      
+
       {/* Botpress Chat Container */}
       <div className="flex-1 p-4">
-        <div id="webchat" style={{ width: '100%', height: '100%' }}></div>
+        <div className="w-full h-full">
+          <Webchat
+            clientId="7a37af73-17ed-43ef-895a-1d77238c02e7"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
       </div>
     </div>
   );
