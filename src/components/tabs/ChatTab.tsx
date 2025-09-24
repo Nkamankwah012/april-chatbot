@@ -32,7 +32,7 @@ export const ChatTab = ({ onBackToHome }: ChatTabProps) => {
         <iframe
           src="https://cdn.botpress.cloud/webchat/v3.2/share.html?config=7a37af73-17ed-43ef-895a-1d77238c02e7&hideWidget=true"
           width="100%"
-          height="100%"
+          height="600px"
           style={{ border: 'none', borderRadius: '12px' }}
           title="April - AI Assistant"
         />
