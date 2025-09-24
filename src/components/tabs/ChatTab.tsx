@@ -70,7 +70,7 @@ export const ChatTab = ({ onBackToHome }: ChatTabProps) => {
       
       {/* Botpress Chat Container */}
       <div className="flex-1 p-4">
-        <div id="webchat" style={{ width: '100%', height: '500px' }}></div>
+        <div id="webchat" style={{ width: '100%', height: '100%' }}></div>
       </div>
     </div>
   );
