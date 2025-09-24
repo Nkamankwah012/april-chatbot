@@ -8,13 +8,21 @@ interface ChatTabProps {
   shouldLoadPrevious?: boolean;
 }
 
-export const ChatTab = ({ onBackToHome }: ChatTabProps) => {
+export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   // Initialize Botpress after this tab mounts so the #webchat container exists
   useEffect(() => {
     const init = () => {
       const bp = (window as any).botpress;
       if (bp) {
-        bp.on('webchat:ready', () => bp.open());
+        bp.on('webchat:ready', () => {
+          bp.open();
+          // Send initial message if provided
+          if (initialMessage) {
+            setTimeout(() => {
+              bp.sendEvent({ type: 'text', payload: { text: initialMessage } });
+            }, 1000);
+          }
+        });
         bp.init({
           botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
           configuration: {
@@ -48,7 +56,7 @@ export const ChatTab = ({ onBackToHome }: ChatTabProps) => {
     // Defer to ensure the container is mounted
     const t = setTimeout(init, 0);
     return () => clearTimeout(t);
-  }, []);
+  }, [initialMessage]);
 
   return (
     <div className="h-full flex flex-col">

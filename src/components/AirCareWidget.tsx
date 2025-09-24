@@ -27,12 +27,13 @@ export const AirCareWidget = () => {
   const [shouldLoadPrevious, setShouldLoadPrevious] = useState(false);
 
   const handleBookDiagnostic = () => {
-    setInitialChatMessage("I'd like to book a diagnostic appointment.");
+    setInitialChatMessage("Hi I'd like to book diagnostic");
+    setShouldLoadPrevious(false);
     setActiveTab("chat");
   };
 
   const handleRequestEstimate = () => {
-    setInitialChatMessage("I'd like to request an estimate for a system replacement.");
+    setInitialChatMessage("Hi I'd like to request estimate");
     setShouldLoadPrevious(false);
     setActiveTab("chat");
   };
@@ -44,7 +45,7 @@ export const AirCareWidget = () => {
   };
 
   const handleStartNewChat = () => {
-    setInitialChatMessage(undefined);
+    setInitialChatMessage("Hi");
     setShouldLoadPrevious(false);
     setActiveTab("chat");
   };
