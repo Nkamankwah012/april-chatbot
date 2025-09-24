@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare Widget - Embed Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .embed-instructions {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-content">
+        <h1>AirCare Widget Integration Example</h1>
+        <p>This page demonstrates how to embed the AirCare widget into any website.</p>
+        
+        <div class="embed-instructions">
+            <h2>Easy Integration Methods</h2>
+            
+            <h3>Method 1: Auto-Initialize (Simplest)</h3>
+            <p>Add this script tag to your website:</p>
+            <pre><code>&lt;script 
+    src="https://your-domain.com/widget.js" 
+    data-aircare-widget
+    data-theme="light"
+    data-width="400px"
+    data-height="750px"&gt;
+&lt;/script&gt;</code></pre>
+
+            <h3>Method 2: Manual Control</h3>
+            <p>For more control over initialization:</p>
+            <pre><code>&lt;script src="https://your-domain.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    // Initialize when ready
+    window.AirCareWidget.init({
+        containerId: 'my-widget-container',
+        theme: 'light',
+        width: '400px',
+        height: '750px'
+    });
+&lt;/script&gt;</code></pre>
+
+            <h3>Method 3: Custom Container</h3>
+            <p>Embed in a specific element:</p>
+            <pre><code>&lt;div id="aircare-support"&gt;&lt;/div&gt;
+&lt;script src="https://your-domain.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    window.AirCareWidget.init({
+        containerId: 'aircare-support',
+        theme: 'light'
+    });
+&lt;/script&gt;</code></pre>
+
+            <h3>Available Methods</h3>
+            <ul>
+                <li><code>window.AirCareWidget.init(config)</code> - Initialize widget</li>
+                <li><code>window.AirCareWidget.show()</code> - Show widget</li>
+                <li><code>window.AirCareWidget.hide()</code> - Hide widget</li>
+                <li><code>window.AirCareWidget.destroy()</code> - Remove widget</li>
+            </ul>
+
+            <h3>Configuration Options</h3>
+            <ul>
+                <li><code>containerId</code>: ID of container element (default: 'aircare-widget')</li>
+                <li><code>theme</code>: 'light' or 'dark' (default: 'light')</li>
+                <li><code>width</code>: Widget width (default: '400px')</li>
+                <li><code>height</code>: Widget height (default: '750px')</li>
+                <li><code>botId</code>: Custom bot ID</li>
+                <li><code>botUrl</code>: Custom bot URL</li>
+            </ul>
+        </div>
+
+        <p>The widget will appear in the bottom-right corner of the page by default, or in your specified container.</p>
+    </div>
+
+    <!-- Example: Auto-initialize widget -->
+    <script 
+        src="/widget.js" 
+        data-aircare-widget
+        data-theme="light"
+        data-width="400px"
+        data-height="750px">
+    </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare Widget Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        .status {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-content">
+        <h1>AirCare Widget Demo</h1>
+        <p>This demonstrates the embeddable AirCare widget that can be integrated into any website.</p>
+        
+        <div class="controls">
+            <button onclick="initWidget()">Initialize Widget</button>
+            <button onclick="showWidget()">Show Widget</button>
+            <button onclick="hideWidget()">Hide Widget</button>
+            <button onclick="destroyWidget()">Destroy Widget</button>
+        </div>
+
+        <div class="status">
+            <h3>Integration Status</h3>
+            <p id="status">Click "Initialize Widget" to start</p>
+        </div>
+
+        <div style="margin-top: 3rem; text-align: left; background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 8px;">
+            <h3>How to Embed on Your Website:</h3>
+            <pre style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; overflow-x: auto;"><code>&lt;script 
+    src="https://yoursite.com/widget.js" 
+    data-aircare-widget
+    data-theme="light"&gt;
+&lt;/script&gt;</code></pre>
+        </div>
+    </div>
+
+    <!-- Load the widget script -->
+    <script src="/src/widget.tsx" type="module"></script>
+    
+    <script>
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        function initWidget() {
+            if (window.AirCareWidget) {
+                window.AirCareWidget.init({
+                    theme: 'light',
+                    width: '400px',
+                    height: '750px'
+                });
+                updateStatus('Widget initialized successfully!');
+            } else {
+                updateStatus('Error: Widget not loaded. Check console for details.');
+            }
+        }
+
+        function showWidget() {
+            if (window.AirCareWidget) {
+                window.AirCareWidget.show();
+                updateStatus('Widget shown');
+            } else {
+                updateStatus('Widget not initialized');
+            }
+        }
+
+        function hideWidget() {
+            if (window.AirCareWidget) {
+                window.AirCareWidget.hide();
+                updateStatus('Widget hidden');
+            } else {
+                updateStatus('Widget not initialized');
+            }
+        }
+
+        function destroyWidget() {
+            if (window.AirCareWidget) {
+                window.AirCareWidget.destroy();
+                updateStatus('Widget destroyed');
+            } else {
+                updateStatus('Widget not initialized');
+            }
+        }
+
+        // Check if widget loaded
+        setTimeout(() => {
+            if (window.AirCareWidget) {
+                updateStatus('Widget script loaded successfully! Ready to initialize.');
+            } else {
+                updateStatus('Widget script failed to load. Check console for errors.');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
