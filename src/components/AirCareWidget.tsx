@@ -33,7 +33,7 @@ export const AirCareWidget = () => {
   };
 
   const handleRequestEstimate = () => {
-    setInitialChatMessage("Hi I'd like to book diagnostic");
+    setInitialChatMessage("Hi I'd like to request an estimate");
     setShouldLoadPrevious(false);
     setActiveTab("chat");
   };
