@@ -9,53 +9,55 @@ interface ChatTabProps {
 }
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
-  // Initialize Botpress after this tab mounts so the #webchat container exists
+  // Initialize Botpress WebChat once, and send initial messages whenever provided
   useEffect(() => {
-    const init = () => {
-      const bp = (window as any).botpress;
-      if (bp) {
-        bp.on('webchat:ready', () => {
-          bp.open();
-          // Send initial message if provided
-          if (initialMessage) {
-            setTimeout(() => {
-              bp.sendEvent({ type: 'text', payload: { text: initialMessage } });
-            }, 1000);
+    let mounted = true;
+
+    const init = async () => {
+      // Wait for the Botpress WebChat script to be ready
+      let attempts = 0;
+      while (!(window as any).botpressWebChat && attempts < 50) {
+        await new Promise((r) => setTimeout(r, 100));
+        attempts++;
+      }
+
+      const bpw = (window as any).botpressWebChat;
+      if (!mounted || !bpw) {
+        console.error('Botpress WebChat not loaded');
+        return;
+      }
+
+      // Ensure a clean mount each time this tab is shown
+      const el = document.querySelector('#webchat');
+      if (el) (el as HTMLElement).innerHTML = '';
+
+      // Initialize embedded webchat inside #webchat
+      bpw.init({
+        botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
+        clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
+        messagingUrl: 'https://messaging.botpress.cloud',
+        container: '#webchat',
+        hideWidget: true,
+        theme: 'light',
+      });
+
+      // If an initial message exists, send it after init
+      if (initialMessage) {
+        setTimeout(() => {
+          try {
+            bpw.sendEvent({ type: 'MESSAGE', text: initialMessage });
+          } catch (e) {
+            console.error('Failed to send initial message', e);
           }
-        });
-        bp.init({
-          botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
-          configuration: {
-            version: 'v2',
-            botName: 'April',
-            botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
-            botDescription: 'How can I  help you today...',
-            fabImage: 'https://files.bpcontent.cloud/2025/09/19/21/20250919214955-ITA8SVEK.jpeg',
-            website: {},
-            email: {},
-            phone: {},
-            termsOfService: {},
-            privacyPolicy: {},
-            color: '#3276EA',
-            variant: 'solid',
-            headerVariant: 'glass',
-            themeMode: 'light',
-            fontFamily: 'inter',
-            radius: 4,
-            feedbackEnabled: true,
-            footer: '[⚡ by Botpress](https://botpress.com/?from=webchat)',
-            soundEnabled: true,
-          },
-          clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-          selector: '#webchat',
-        });
-      } else {
-        console.error('Botpress not loaded yet');
+        }, 300);
       }
     };
-    // Defer to ensure the container is mounted
-    const t = setTimeout(init, 0);
-    return () => clearTimeout(t);
+
+    init();
+
+    return () => {
+      mounted = false;
+    };
   }, [initialMessage]);
 
   return (
