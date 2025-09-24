@@ -86,20 +86,41 @@ export const AirCareWidget = () => {
   return (
     <div className="widget-container w-full max-w-md mx-auto h-[750px] flex flex-col">
       {/* Tab Content */}
-      <div className="flex-1 relative">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            {renderTabContent()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+        <div className="flex-1 relative">
+          {/* Always-mounted Chat tab for persistence */}
+          <div className={cn("absolute inset-0", activeTab === "chat" ? "" : "hidden")}>
+            <ChatTab 
+              initialMessage={initialChatMessage}
+              onBackToHome={() => setActiveTab("home")}
+              shouldLoadPrevious={shouldLoadPrevious}
+            />
+          </div>
+
+          {/* Animated switcher for non-chat tabs */}
+          <AnimatePresence mode="wait">
+            {activeTab !== "chat" && (
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute inset-0"
+              >
+                {activeTab === "home" ? (
+                  <HomeTab 
+                    onStartChat={handleStartNewChat}
+                    onBookDiagnostic={handleBookDiagnostic}
+                    onRequestEstimate={handleRequestEstimate}
+                    onContinueConversation={handleContinueConversation}
+                  />
+                ) : (
+                  <FAQTab />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
       {/* Bottom Navigation */}
       <div className="border-t border-border/30 bg-white/50 backdrop-blur-sm">

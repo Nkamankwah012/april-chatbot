@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,13 +10,15 @@ interface ChatTabProps {
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   // Initialize Botpress WebChat once, and send initial messages whenever provided
+  // Initialize Botpress once on mount; don't re-init on message changes
   useEffect(() => {
     let mounted = true;
+    const initializedFlag = '__aircare_bpw_initialized__';
 
     const init = async () => {
-      // Wait for the Botpress WebChat script to be ready
+      // Wait for Botpress WebChat script to be ready
       let attempts = 0;
-      while (!(window as any).botpressWebChat && attempts < 50) {
+      while (!(window as any).botpressWebChat && attempts < 100 && mounted) {
         await new Promise((r) => setTimeout(r, 100));
         attempts++;
       }
@@ -27,11 +29,9 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         return;
       }
 
-      // Ensure a clean mount each time this tab is shown
-      const el = document.querySelector('#webchat');
-      if (el) (el as HTMLElement).innerHTML = '';
+      // Avoid re-initializing if already done
+      if ((window as any)[initializedFlag]) return;
 
-      // Initialize embedded webchat inside #webchat
       bpw.init({
         botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
         clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
@@ -41,23 +41,27 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         theme: 'light',
       });
 
-      // If an initial message exists, send it after init
-      if (initialMessage) {
-        setTimeout(() => {
-          try {
-            bpw.sendEvent({ type: 'MESSAGE', text: initialMessage });
-          } catch (e) {
-            console.error('Failed to send initial message', e);
-          }
-        }, 300);
-      }
+      (window as any)[initializedFlag] = true;
     };
 
     init();
-
     return () => {
       mounted = false;
     };
+  }, []);
+
+  // Send initial messages without re-initializing
+  useEffect(() => {
+    if (!initialMessage) return;
+    const bpw = (window as any).botpressWebChat;
+    if (!bpw) return;
+    setTimeout(() => {
+      try {
+        bpw.sendEvent({ type: 'MESSAGE', text: initialMessage });
+      } catch (e) {
+        console.error('Failed to send initial message', e);
+      }
+    }, 300);
   }, [initialMessage]);
 
   return (
