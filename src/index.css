@@ -306,39 +306,18 @@
   }
 }
 
-/* Completely hide Botpress widget */
-/* Completely hide ALL Botpress widget elements - comprehensive selectors */
-#bp-web-widget,
-#bp-webchat,
-.bpw-widget-btn,
-.bp-widget-web,
-[data-testid="botpress-webchat"],
-#botpress-webchat,
-.botpress-widget,
-.bp-widget,
-.bp-webchat,
-.bp-chat-widget,
-.bp-conversation,
-.bp-launcher,
-.bp-floating-button,
-.bp-chat-bubble,
-.bp-widget-container,
-[id*="botpress"],
-[class*="botpress"],
-[data-cy*="botpress"],
-[data-testid*="botpress"],
-[id*="bp-"],
-[class*="bp-"],
-iframe[src*="botpress"],
-iframe[src*="webchat"] {
+/* Botpress embedded webchat layout fixes */
+#webchat .bpWebchat {
+  position: unset !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Hide only the floating FAB when using embedded container */
+#webchat .bpFab,
+#webchat .bpw-widget-btn,
+#webchat .bp-widget-btn {
   display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  position: absolute !important;
-  left: -9999px !important;
-  top: -9999px !important;
-  width: 0 !important;
-  height: 0 !important;
-  z-index: -9999 !important;
-  pointer-events: none !important;
 }
