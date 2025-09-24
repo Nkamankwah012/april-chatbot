@@ -88,7 +88,10 @@ export const AirCareWidget = () => {
       {/* Tab Content */}
         <div className="flex-1 relative">
           {/* Always-mounted Chat tab for persistence */}
-          <div className={cn("absolute inset-0", activeTab === "chat" ? "" : "hidden")}>
+          <div className={cn(
+            "absolute inset-0 transition-opacity",
+            activeTab === "chat" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          )}>
             <ChatTab 
               initialMessage={initialChatMessage}
               onBackToHome={() => setActiveTab("home")}
