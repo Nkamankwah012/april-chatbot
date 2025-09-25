@@ -111,7 +111,10 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
           )}
 
           {/* Live Call Card - Floating */}
-          <div className="floating-card conversation-card animate-fade-in animation-delay-800 group cursor-pointer">
+          <div 
+            onClick={() => window.location.href = 'tel:+14084432613'}
+            className="floating-card conversation-card animate-fade-in animation-delay-800 group cursor-pointer"
+          >
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                 <Phone className="w-5 h-5 text-white" />
