@@ -84,7 +84,7 @@ export const AirCareWidget = () => {
   };
 
   return (
-    <div className="widget-container w-full max-w-md mx-auto h-[750px] flex flex-col">
+    <div className="widget-container w-full max-w-md mx-auto h-[650px] flex flex-col">
       {/* Tab Content */}
         <div className="flex-1 relative">
           {/* Always-mounted Chat tab for persistence */}
