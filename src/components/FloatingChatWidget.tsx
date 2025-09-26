@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Phone, MessageCircle, HelpCircle, X } from "lucide-react";
+import { Phone, MessageCircle, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AirCareWidget } from "./AirCareWidget";
-import aprilAvatar from "@/assets/april-avatar-new.jpg";
 
 export const FloatingChatWidget = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -25,76 +24,61 @@ export const FloatingChatWidget = () => {
         {isExpanded ? (
           <motion.div
             key="expanded"
-            initial={{ scale: 0, opacity: 0, originX: 1, originY: 1 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0, originX: 1, originY: 1 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-[360px] flex flex-col"
+            initial={{ height: "60px", width: "300px" }}
+            animate={{ height: "700px", width: "400px" }}
+            exit={{ height: "60px", width: "300px" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="bg-[hsl(var(--widget-glass))] backdrop-blur-sm border border-border/50 rounded-2xl shadow-[var(--shadow-medium)] overflow-hidden"
           >
-            {/* Main Widget */}
-            <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200 mb-2">
-              {/* Close Button */}
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="absolute top-2 right-2 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              
-              {/* Chat Content */}
-              <div className="h-[600px]">
-                <AirCareWidget />
-              </div>
-            </div>
+            {/* Close button in top right of expanded widget */}
+            <button
+              onClick={() => setIsExpanded(false)}
+              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg"
+            >
+              ×
+            </button>
             
-            {/* Bottom Navigation Bar */}
-            <div className="bg-orange-400 rounded-xl p-3 shadow-xl">
-              <div className="flex justify-around items-center">
-                <button
-                  onClick={handleCall}
-                  className="flex flex-col items-center text-white hover:text-orange-100 transition-colors px-4 py-2"
-                >
-                  <Phone className="w-6 h-6 mb-1" />
-                  <span className="text-sm font-medium">Call</span>
-                </button>
-                
-                <button
-                  onClick={handleChat}
-                  className="flex flex-col items-center text-white hover:text-orange-100 transition-colors px-4 py-2"
-                >
-                  <MessageCircle className="w-6 h-6 mb-1" />
-                  <span className="text-sm font-medium">Chat</span>
-                </button>
-                
-                <button
-                  onClick={handleFAQ}
-                  className="flex flex-col items-center text-white hover:text-orange-100 transition-colors px-4 py-2"
-                >
-                  <HelpCircle className="w-6 h-6 mb-1" />
-                  <span className="text-sm font-medium">FAQ</span>
-                </button>
-              </div>
+            {/* Full widget content */}
+            <div className="h-full">
+              <AirCareWidget />
             </div>
           </motion.div>
         ) : (
-          <motion.button
-            key="minimized"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            onClick={handleChat}
-            className="w-[60px] h-[60px] rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-300 overflow-hidden border-4 border-white"
-            style={{
-              backgroundImage: `url(${aprilAvatar})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Open chat with April"
+          <motion.div
+            key="collapsed"
+            initial={{ height: "700px", width: "400px" }}
+            animate={{ height: "60px", width: "300px" }}
+            exit={{ height: "700px", width: "400px" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent))] rounded-2xl shadow-[var(--shadow-medium)] overflow-hidden"
           >
-          </motion.button>
+            {/* Navigation Bar */}
+            <div className="h-full flex items-center justify-around px-4">
+              <button
+                onClick={handleCall}
+                className="flex flex-col items-center text-white hover:text-white/80 transition-colors py-2 px-3"
+              >
+                <Phone className="w-5 h-5 mb-1" />
+                <span className="text-xs font-medium">Call</span>
+              </button>
+              
+              <button
+                onClick={handleChat}
+                className="flex flex-col items-center text-white hover:text-white/80 transition-colors py-2 px-3"
+              >
+                <MessageCircle className="w-5 h-5 mb-1" />
+                <span className="text-xs font-medium">Chat</span>
+              </button>
+              
+              <button
+                onClick={handleFAQ}
+                className="flex flex-col items-center text-white hover:text-white/80 transition-colors py-2 px-3"
+              >
+                <HelpCircle className="w-5 h-5 mb-1" />
+                <span className="text-xs font-medium">FAQ</span>
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
