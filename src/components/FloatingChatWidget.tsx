@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Phone, MessageCircle, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AirCareWidget } from "./AirCareWidget";
 
-export const FloatingChatWidget = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [initialTab, setInitialTab] = useState<"home" | "chat" | "faq">("home");
+interface FloatingChatWidgetProps {
+  autoOpen?: boolean;
+  initialTab?: "home" | "chat" | "faq";
+}
+
+export const FloatingChatWidget = ({ autoOpen = false, initialTab: propInitialTab = "home" }: FloatingChatWidgetProps = {}) => {
+  const [isExpanded, setIsExpanded] = useState(autoOpen);
+  const [initialTab, setInitialTab] = useState<"home" | "chat" | "faq">(propInitialTab);
+
+  useEffect(() => {
+    if (autoOpen) {
+      setIsExpanded(true);
+      setInitialTab(propInitialTab);
+    }
+  }, [autoOpen, propInitialTab]);
 
   const handleCall = () => {
     window.open('tel:4084432613', '_self');
