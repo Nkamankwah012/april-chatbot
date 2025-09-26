@@ -146,6 +146,10 @@
            backdrop-blur-sm border border-border/50
            bg-[hsl(var(--widget-glass))]
            overflow-hidden;
+    /* Mobile optimizations */
+    @apply max-h-screen sm:max-h-none;
+    @apply mx-2 sm:mx-auto;
+    @apply rounded-xl sm:rounded-2xl;
   }
   
   .widget-header {
