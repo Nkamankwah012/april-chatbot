@@ -5,17 +5,20 @@ import { AirCareWidget } from "./AirCareWidget";
 
 export const FloatingChatWidget = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [initialTab, setInitialTab] = useState<"home" | "chat" | "faq">("home");
 
   const handleCall = () => {
-    window.open('tel:+14084432613', '_self');
+    window.open('tel:4084432613', '_self');
   };
 
   const handleChat = () => {
+    setInitialTab("chat");
     setIsExpanded(true);
   };
 
   const handleFAQ = () => {
-    window.open('https://april-chatbot.lovable.app/faq', '_blank');
+    setInitialTab("faq");
+    setIsExpanded(true);
   };
 
   return (
@@ -69,7 +72,7 @@ export const FloatingChatWidget = () => {
               transition={{ delay: 0.2, duration: 0.4 }}
               className="h-full"
             >
-              <AirCareWidget />
+              <AirCareWidget initialTab={initialTab} />
             </motion.div>
           </motion.div>
         ) : (
