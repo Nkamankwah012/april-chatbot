@@ -217,12 +217,11 @@
   
   .chat-background::before {
     content: '';
-    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    @apply absolute inset-0 opacity-[0.15] pointer-events-none;
     background-image: url('/aircare-logo-pattern.jpeg');
-    background-size: 80px 80px;
+    background-size: 150px 150px;
     background-repeat: repeat;
     background-position: 0 0;
-    filter: grayscale(100%) contrast(1.2);
   }
 
   /* Floating Cards */
