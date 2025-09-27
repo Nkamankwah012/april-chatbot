@@ -9,10 +9,10 @@
 @layer base {
   :root {
     /* AirCare Brand Colors - Red & Blue Theme */
-    --aircare-red: 0 84% 60%;
-    --aircare-blue: 208 100% 50%;
-    --aircare-gradient: linear-gradient(135deg, hsl(0 84% 60%), hsl(208 100% 50%));
-    --aircare-gradient-soft: linear-gradient(135deg, hsl(0 84% 60% / 0.1), hsl(208 100% 50% / 0.1));
+    --aircare-red: 355 85% 50%;
+    --aircare-blue: 208 80% 55%;
+    --aircare-gradient: linear-gradient(120deg, hsl(355 85% 50%) 0%, hsl(355 85% 50%) 60%, hsl(208 80% 55%) 100%);
+    --aircare-gradient-soft: linear-gradient(120deg, hsl(355 85% 50% / 0.15) 0%, hsl(355 85% 50% / 0.15) 60%, hsl(208 80% 55% / 0.1) 100%);
     
     /* Widget Background System */
     --widget-background: 210 20% 98%;
@@ -57,13 +57,13 @@
     --card-foreground: 215 20% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 215 20% 15%;
-    --primary: 208 100% 50%;
+    --primary: 355 85% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 15% 92%;
     --secondary-foreground: 215 20% 15%;
     --muted: 210 15% 95%;
     --muted-foreground: 215 15% 45%;
-    --accent: 0 84% 60%;
+    --accent: 208 80% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 100%;
