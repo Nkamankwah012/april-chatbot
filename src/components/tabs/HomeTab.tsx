@@ -1,6 +1,6 @@
 import { ArrowRight, Phone, MessageSquare, Calendar, FileText } from "lucide-react";
-import aircareLogoImg from "@/assets/aircare-logo.jpeg";
 import { conversationStorage } from "@/lib/conversationStorage";
+import { ProcessedLogo } from "@/components/ProcessedLogo";
 
 interface HomeTabProps {
   onStartChat: () => void;
@@ -19,11 +19,10 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
         {/* Logo and Greeting */}
         <div className="relative z-10 pt-4 pb-5 px-6">
           <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg mb-6">
-              <img 
-                src={aircareLogoImg} 
+            <div className="w-16 h-16 flex items-center justify-center mb-6">
+              <ProcessedLogo 
                 alt="AirCare Logo" 
-                className="w-full h-full object-contain rounded-full"
+                className="w-14 h-14 object-contain drop-shadow-lg"
               />
             </div>
             <div className="space-y-1">
