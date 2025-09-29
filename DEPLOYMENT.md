@@ -2,6 +2,10 @@
 
 Your Lovable app: **april-chatbot.lovable.app**
 
+## Important: Widget File is NOT Auto-Deployed
+
+⚠️ **Lovable's standard publish does NOT build the widget file.** You need to build it separately.
+
 ## Step 1: Build the Widget
 
 Run this command in your project directory to build the widget:
@@ -20,15 +24,20 @@ This single file contains everything needed for the widget to work.
 
 ## Step 3: Host the Widget File
 
-You have two options:
+⚠️ **The widget file must be hosted separately** - it's NOT included in Lovable's standard deployment.
 
-### Option A: Use Lovable's CDN (Easiest)
-After deploying your Lovable app, your widget will be available at:
-```
-https://april-chatbot.lovable.app/widget.iife.js
-```
+### Hosting Options:
 
-### Option B: Self-Host on Your Website
+1. **Upload to your web hosting** (recommended)
+   - Upload `dist/widget.iife.js` to your server
+   - Place it at `/assets/widget.iife.js` or `/scripts/widget.iife.js`
+   - Reference: `https://yourdomain.com/assets/widget.iife.js`
+
+2. **Use a CDN service** (e.g., Cloudflare, AWS CloudFront)
+   - Upload the file to your CDN
+   - Use the CDN URL in your integration code
+
+3. **GitHub Pages or similar** (for testing)
 1. Upload `dist/widget.iife.js` to your web server
 2. Place it in an accessible directory (e.g., `/assets/` or `/scripts/`)
 3. Use your own URL in the integration code
@@ -40,9 +49,9 @@ https://april-chatbot.lovable.app/widget.iife.js
 Add this script tag to your website's HTML (before closing `</body>` tag):
 
 ```html
-<!-- Auto-opens to home section when users land on your site -->
+<!-- Replace YOUR-WIDGET-URL with your actual hosted widget URL -->
 <script 
-  src="https://april-chatbot.lovable.app/widget.iife.js" 
+  src="YOUR-WIDGET-URL/widget.iife.js"
   data-aircare-widget="true"
   data-auto-open="true"
   data-initial-tab="home"
@@ -54,7 +63,7 @@ Add this script tag to your website's HTML (before closing `</body>` tag):
 
 ```html
 <!-- Load the widget script -->
-<script src="https://april-chatbot.lovable.app/widget.iife.js"></script>
+<script src="YOUR-WIDGET-URL/widget.iife.js"></script>
 
 <script>
 // Initialize when page loads
