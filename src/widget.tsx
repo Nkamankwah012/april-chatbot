@@ -14,15 +14,12 @@ interface AirCareWidgetConfig {
   theme?: 'light' | 'dark';
   width?: string;
   height?: string;
-  autoOpen?: boolean;
-  initialTab?: 'home' | 'chat' | 'faq';
 }
 
 // Global widget class
 class AirCareEmbeddableWidget {
   private queryClient: QueryClient;
   private root: any = null;
-  private config: { autoOpen: boolean; initialTab: 'home' | 'chat' | 'faq' } = { autoOpen: false, initialTab: 'home' };
 
   constructor() {
     this.queryClient = new QueryClient();
@@ -31,13 +28,8 @@ class AirCareEmbeddableWidget {
   init(config: AirCareWidgetConfig = {}) {
     const {
       containerId = 'aircare-widget',
-      theme = 'light',
-      autoOpen = false,
-      initialTab = 'home'
+      theme = 'light'
     } = config;
-    
-    // Store config for rendering
-    this.config = { autoOpen, initialTab };
 
     // Find or create container
     let container = document.getElementById(containerId);
@@ -68,10 +60,7 @@ class AirCareEmbeddableWidget {
       <QueryClientProvider client={this.queryClient}>
         <TooltipProvider>
           <div className="bg-background text-foreground pointer-events-auto">
-            <FloatingChatWidget 
-              autoOpen={this.config.autoOpen} 
-              initialTab={this.config.initialTab}
-            />
+            <FloatingChatWidget />
           </div>
           <Toaster />
           <Sonner />
@@ -126,8 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
       theme: (script.dataset.theme as 'light' | 'dark') || 'light',
       width: script.dataset.width,
       height: script.dataset.height,
-      autoOpen: script.dataset.autoOpen === 'true',
-      initialTab: (script.dataset.initialTab as 'home' | 'chat' | 'faq') || 'home',
     };
     airCareWidget.init(config);
   }

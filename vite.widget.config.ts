@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/widget.js'),
+      entry: path.resolve(__dirname, 'src/widget.tsx'),
       name: 'AirCareWidget',
       fileName: 'widget',
       formats: ['iife']

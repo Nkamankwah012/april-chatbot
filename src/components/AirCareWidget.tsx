@@ -15,18 +15,14 @@ interface Tab {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-interface AirCareWidgetProps {
-  initialTab?: TabType;
-}
-
 const tabs: Tab[] = [
   { id: "home", label: "Home", icon: Home },
   { id: "chat", label: "Chats", icon: MessageCircle },
   { id: "faq", label: "FAQ", icon: HelpCircle },
 ];
 
-export const AirCareWidget = ({ initialTab = "home" }: AirCareWidgetProps = {}) => {
-  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+export const AirCareWidget = () => {
+  const [activeTab, setActiveTab] = useState<TabType>("home");
   const [initialChatMessage, setInitialChatMessage] = useState<string | undefined>();
   const [shouldLoadPrevious, setShouldLoadPrevious] = useState(false);
 

@@ -9,7 +9,7 @@ interface ChatTabProps {
 }
 
 // Reconnect Botpress using the provided CDN + window.botpress API
-export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) => {
+export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   useEffect(() => {
     let mounted = true;
     const initializedFlag = '__aircare_botpress_initialized__';
@@ -24,16 +24,8 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
 
     const onReady = () => {
       try {
-        // Always open the webchat when ready
         (window as any).botpress?.open?.();
-        // Ensure the webchat is visible
-        const webchatElement = document.getElementById('webchat');
-        if (webchatElement) {
-          webchatElement.style.display = 'block';
-        }
-      } catch (e) {
-        console.error('Error opening webchat:', e);
-      }
+      } catch {}
     };
 
     const init = async () => {
@@ -58,7 +50,7 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
             version: 'v2',
             botName: 'April',
             botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
-            botDescription: 'How can I help you today...',
+            botDescription: 'How can I  help you today...',
             fabImage: 'https://files.bpcontent.cloud/2025/09/19/21/20250919214955-ITA8SVEK.jpeg',
             website: {},
             email: {},
@@ -78,31 +70,16 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
         });
         (window as any)[initializedFlag] = true;
       } else {
-        // If already initialized, ensure it opens and is visible
-        try { 
-          bp.open?.(); 
-          // Force the webchat to be visible
-          setTimeout(() => {
-            const webchatElement = document.getElementById('webchat');
-            if (webchatElement) {
-              webchatElement.style.display = 'block';
-            }
-          }, 100);
-        } catch {}
+        // If already initialized, ensure it opens and rebinds to container
+        try { bp.open?.(); } catch {}
       }
 
-      // Always open the webchat after a short delay to ensure it's visible
-      setTimeout(() => {
-        try { 
-          bp.open?.();
-          // Send initial message if provided
-          if (initialMessage) {
-            setTimeout(() => {
-              try { bp.sendMessage?.(initialMessage); } catch {}
-            }, 300);
-          }
-        } catch {}
-      }, 200);
+      // Optional: send initial message once chat is ready
+      if (initialMessage) {
+        setTimeout(() => {
+          try { bp.sendMessage?.(initialMessage); } catch {}
+        }, 500);
+      }
     };
 
     void init();
@@ -110,7 +87,7 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       mounted = false;
       try { (window as any).botpress?.off?.('webchat:ready', onReady); } catch {}
     };
-  }, [initialMessage, shouldLoadPrevious]);
+  }, [initialMessage]);
 
   return (
     <div className="h-full flex flex-col">
@@ -131,7 +108,7 @@ export const ChatTab = ({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
       )}
 
       {/* Botpress Chat Container */}
-      <div className="flex-1 p-4 chat-background">
+      <div className="flex-1 p-4">
         <div id="webchat" style={{ width: '100%', height: '100%' }} />
       </div>
     </div>
