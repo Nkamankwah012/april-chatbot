@@ -8,11 +8,13 @@
 
 @layer base {
   :root {
-    /* AirCare Brand Colors - Red & Blue Theme */
-    --aircare-red: 0 84% 60%;
-    --aircare-blue: 208 100% 50%;
-    --aircare-gradient: linear-gradient(110deg, hsl(0 84% 60%) 0%, hsl(0 84% 60%) 45%, hsl(208 100% 50%) 55%, hsl(208 100% 50%) 100%);
-    --aircare-gradient-soft: linear-gradient(110deg, hsl(0 84% 60% / 0.1) 0%, hsl(0 84% 60% / 0.1) 45%, hsl(208 100% 50% / 0.1) 55%, hsl(208 100% 50% / 0.1) 100%);
+    /* AirCare Brand Colors - Red to Blue Gradient */
+    --aircare-red: 0 75% 55%;
+    --aircare-pink: 330 60% 55%;
+    --aircare-purple: 280 50% 60%;
+    --aircare-blue: 215 75% 60%;
+    --aircare-gradient: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
+    --aircare-gradient-soft: linear-gradient(90deg, hsl(0 75% 55% / 0.1) 0%, hsl(330 60% 55% / 0.1) 33%, hsl(280 50% 60% / 0.1) 66%, hsl(215 75% 60% / 0.1) 100%);
     
     /* Widget Background System */
     --widget-background: 210 20% 98%;
@@ -160,24 +162,21 @@
 
   /* Wave Header Styles */
   .wave-header {
-    @apply bg-gradient-to-br from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           relative overflow-hidden;
+    @apply relative overflow-hidden;
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
   }
 
   /* Taller Wave Header - 35% of screen height */
   .wave-header-tall {
-    @apply bg-gradient-to-br from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           relative overflow-hidden;
+    @apply relative overflow-hidden;
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
     min-height: 35vh;
   }
 
   /* Refined Wave Header - Better proportions */
   .wave-header-refined {
-    @apply bg-gradient-to-br from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           relative overflow-hidden;
+    @apply relative overflow-hidden;
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
     height: 28vh;
     min-height: 180px;
   }
@@ -243,23 +242,21 @@
   }
   
   .gradient-button {
-    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           text-white font-medium rounded-full px-6 py-3
+    @apply text-white font-medium rounded-full px-6 py-3
            shadow-[var(--shadow-soft)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
            hover:scale-105 active:scale-95;
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
   }
 
   /* Proportionate Primary Button */
   .gradient-button-primary {
-    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           text-white font-semibold rounded-full px-8 py-3.5
+    @apply text-white font-semibold rounded-full px-8 py-3.5
            shadow-[var(--shadow-medium)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
            hover:scale-[1.02] active:scale-[0.98]
            max-w-sm mx-auto;
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
   }
 
   /* Refined Primary Button - Better proportions */
@@ -268,7 +265,7 @@
            shadow-[var(--shadow-medium)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
            hover:scale-[1.02] active:scale-[0.98];
-    background: linear-gradient(110deg, hsl(0 84% 60%) 0%, hsl(0 84% 60%) 45%, hsl(208 100% 50%) 55%, hsl(208 100% 50%) 100%);
+    background: linear-gradient(90deg, hsl(0 75% 55%) 0%, hsl(330 60% 55%) 33%, hsl(280 50% 60%) 66%, hsl(215 75% 60%) 100%);
   }
 
   /* Compact Secondary Buttons */
