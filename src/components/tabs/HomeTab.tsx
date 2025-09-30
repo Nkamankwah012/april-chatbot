@@ -19,11 +19,11 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
         {/* Logo and Greeting */}
         <div className="relative z-10 pt-4 pb-5 px-6">
           <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-white/95 rounded-full flex items-center justify-center p-2 shadow-lg mb-6">
+            <div className="mb-6">
               <img 
                 src={aircareLogoImg} 
                 alt="AirCare Logo" 
-                className="w-full h-full object-contain rounded-full"
+                className="w-24 h-auto object-contain"
               />
             </div>
             <div className="space-y-1">

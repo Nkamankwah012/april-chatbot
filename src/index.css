@@ -10,9 +10,10 @@
   :root {
     /* AirCare Brand Colors - Red & Blue Theme */
     --aircare-red: 0 84% 60%;
+    --aircare-purple: 300 50% 55%;
     --aircare-blue: 208 100% 50%;
-    --aircare-gradient: linear-gradient(135deg, hsl(0 84% 60%), hsl(208 100% 50%));
-    --aircare-gradient-soft: linear-gradient(135deg, hsl(0 84% 60% / 0.1), hsl(208 100% 50% / 0.1));
+    --aircare-gradient: linear-gradient(135deg, hsl(0 84% 60%), hsl(300 50% 55%), hsl(208 100% 50%));
+    --aircare-gradient-soft: linear-gradient(135deg, hsl(0 84% 60% / 0.1), hsl(300 50% 55% / 0.1), hsl(208 100% 50% / 0.1));
     
     /* Widget Background System */
     --widget-background: 210 20% 98%;
@@ -264,12 +265,11 @@
 
   /* Refined Primary Button - Better proportions */
   .gradient-button-refined {
-    @apply bg-gradient-to-r from-[hsl(var(--aircare-red))] 
-           to-[hsl(var(--aircare-blue))]
-           text-white font-medium rounded-full px-6 py-2.5
+    @apply text-white font-medium rounded-full px-6 py-2.5
            shadow-[var(--shadow-medium)] hover:shadow-[var(--glow-primary)]
            transition-[var(--transition-smooth)]
            hover:scale-[1.02] active:scale-[0.98];
+    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(300 50% 55%), hsl(208 100% 50%));
   }
 
   /* Compact Secondary Buttons */

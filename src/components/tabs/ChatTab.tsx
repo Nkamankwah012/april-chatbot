@@ -108,8 +108,10 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
       )}
 
       {/* Botpress Chat Container */}
-      <div className="flex-1 p-4">
-        <div id="webchat" style={{ width: '100%', height: '100%' }} />
+      <div className="flex-1 p-4 relative">
+        {/* Watermark Background */}
+        <div className="watermark-background"></div>
+        <div id="webchat" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }} />
       </div>
     </div>
   );
