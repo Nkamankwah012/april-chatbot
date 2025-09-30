@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { FloatingChatWidget } from "@/components/FloatingChatWidget";
+import { AirCareWidget } from "@/components/AirCareWidget";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -28,6 +28,8 @@ class AirCareEmbeddableWidget {
   init(config: AirCareWidgetConfig = {}) {
     const {
       containerId = 'aircare-widget',
+      width = '400px',
+      height = '750px',
       theme = 'light'
     } = config;
 
@@ -39,11 +41,16 @@ class AirCareEmbeddableWidget {
       document.body.appendChild(container);
     }
 
-    // Apply minimal container styles (FloatingChatWidget handles positioning)
+    // Apply widget styles to container
+    container.style.width = width;
+    container.style.height = height;
     container.style.position = 'fixed';
-    container.style.inset = '0';
-    container.style.pointerEvents = 'none';
+    container.style.bottom = '20px';
+    container.style.right = '20px';
     container.style.zIndex = '9999';
+    container.style.borderRadius = '12px';
+    container.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+    container.style.overflow = 'hidden';
 
     // Set theme
     container.className = theme === 'dark' ? 'dark' : '';
@@ -59,8 +66,8 @@ class AirCareEmbeddableWidget {
     this.root.render(
       <QueryClientProvider client={this.queryClient}>
         <TooltipProvider>
-          <div className="bg-background text-foreground pointer-events-auto">
-            <FloatingChatWidget />
+          <div className="bg-background text-foreground">
+            <AirCareWidget />
           </div>
           <Toaster />
           <Sonner />
