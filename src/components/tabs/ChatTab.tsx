@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
+
+declare global {
+  interface Window {
+    botpressWebChat: any;
+  }
+}
 
 interface ChatTabProps {
   initialMessage?: string;
@@ -8,110 +12,135 @@ interface ChatTabProps {
   shouldLoadPrevious?: boolean;
 }
 
-export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
-  const initRef = useRef(false);
+export const ChatTab = ({ 
+  initialMessage, 
+  onBackToHome, 
+  shouldLoadPrevious 
+}: ChatTabProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initRef.current) return;
+    // Clean up any existing Botpress instance
+    if (window.botpressWebChat) {
+      window.botpressWebChat.sendEvent({ type: 'hide' });
+    }
 
-    console.log('[ChatTab] Loading Botpress v0 script...');
-    
-    // Load Botpress v0 script
+    // Load Botpress script
     const script = document.createElement('script');
-    script.src = 'https://cdn.botpress.cloud/webchat/v0/inject.js';
+    script.src = 'https://cdn.botpress.cloud/webchat/v2.2/inject.js';
     script.async = true;
     
     script.onload = () => {
-      console.log('[ChatTab] Script loaded, waiting for botpressWebChat...');
-      
-      const initBotpress = () => {
-        const bp = (window as any).botpressWebChat;
-        if (bp) {
-          console.log('[ChatTab] Initializing Botpress v0...');
-          
-          try {
-            bp.init({
-              hostUrl: 'https://cdn.botpress.cloud/webchat/v0',
-              botId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-              hideWidget: true,
-              containerWidth: '100%',
-              layoutWidth: '100%',
-              showPoweredBy: false,
-              stylesheet: 'https://cdn.botpress.cloud/webchat/v0/themes/default.css'
+      try {
+        // Initialize Botpress with your configuration
+        window.botpressWebChat.init({
+          composerPlaceholder: "Type your message...",
+          botConversationDescription: "Powered by Botpress",
+          botName: "April",
+          botId: "7a37af73-17ed-43ef-895a-1d77238c02e7",
+          hostUrl: "https://cdn.botpress.cloud/webchat/v2.2",
+          messagingUrl: "https://messaging.botpress.cloud",
+          clientId: "7a37af73-17ed-43ef-895a-1d77238c02e7",
+          webhookId: "webhook-id",
+          lazySocket: true,
+          themeName: "prism",
+          frontendVersion: "v2.2",
+          showPoweredBy: true,
+          theme: "prism",
+          themeColor: "#2563eb",
+          hideWidget: true,
+          disableAnimations: false,
+          closeOnEscape: false,
+          showConversationsButton: false,
+          enableTranscriptDownload: false,
+          className: "webchatIframe",
+          containerWidth: "100%",
+          layoutWidth: "100%",
+          showCloseButton: false
+        });
+
+        // Open the chat widget
+        window.botpressWebChat.sendEvent({ type: 'show' });
+        
+        // Send initial message if provided
+        if (initialMessage && !shouldLoadPrevious) {
+          setTimeout(() => {
+            window.botpressWebChat.sendEvent({ 
+              type: 'proactive-trigger',
+              channel: 'web',
+              payload: { text: initialMessage }
             });
-            
-            initRef.current = true;
-            setIsLoading(false);
-            console.log('[ChatTab] Botpress initialized successfully');
-            
-            // Send initial message if provided
-            if (initialMessage) {
-              setTimeout(() => {
-                (window as any).botpressWebChat?.sendEvent({
-                  type: 'proactive-trigger',
-                  channel: 'web',
-                  payload: { text: initialMessage }
-                });
-              }, 1000);
-            }
-          } catch (error) {
-            console.error('[ChatTab] Initialization error:', error);
-            setIsLoading(false);
-          }
-        } else {
-          console.log('[ChatTab] botpressWebChat not ready, retrying...');
-          setTimeout(initBotpress, 100);
+          }, 1000);
         }
-      };
-      
-      initBotpress();
+
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Failed to initialize Botpress:', err);
+        setError('Failed to load chat assistant');
+        setIsLoading(false);
+      }
     };
-    
+
     script.onerror = () => {
-      console.error('[ChatTab] Failed to load Botpress script');
+      setError('Failed to load chat script');
       setIsLoading(false);
     };
-    
+
     document.body.appendChild(script);
-    
+
     // Cleanup
     return () => {
       if (script.parentNode) {
-        document.body.removeChild(script);
+        script.parentNode.removeChild(script);
+      }
+      if (window.botpressWebChat) {
+        window.botpressWebChat.sendEvent({ type: 'hide' });
       }
     };
-  }, [initialMessage]);
+  }, [initialMessage, shouldLoadPrevious]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-4">
+        <p className="text-destructive mb-4">{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header with back button */}
+    <div className="relative w-full h-full bg-background">
+      {/* Header */}
       {onBackToHome && (
-        <div className="p-4 border-b border-border/30 bg-white/50 backdrop-blur-sm">
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" onClick={onBackToHome} className="p-2">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground">April</h3>
-              <p className="text-sm text-foreground-secondary">Your AirCare virtual assistant</p>
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 flex items-center justify-center">
+              <span className="text-white font-bold">A</span>
             </div>
-            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <div>
+              <h2 className="font-semibold text-foreground">April</h2>
+              <p className="text-xs text-muted-foreground">Your AirCare virtual assistant</p>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Botpress Chat Container - v0 CDN */}
-      <div className="flex-1 relative watermark-background">
+      {/* Chat Container */}
+      <div id="botpress-webchat-container" className="w-full" style={{ height: onBackToHome ? 'calc(100% - 72px)' : '100%' }}>
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              <p className="text-sm text-foreground-secondary">Loading chat...</p>
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading chat assistant...</p>
             </div>
           </div>
         )}
-        <div id="bp-web-widget-container" className="w-full h-full" />
       </div>
     </div>
   );
