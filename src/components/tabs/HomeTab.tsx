@@ -78,37 +78,6 @@ export const HomeTab = ({ onStartChat, onBookDiagnostic, onRequestEstimate, onCo
             </button>
           </div>
 
-          {/* Continue Conversation Card - Floating */}
-          {hasRecentConversation && recentConversation && (
-            <div 
-              onClick={onContinueConversation}
-              className="floating-card conversation-card animate-fade-in animation-delay-600 group cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-semibold text-foreground text-sm">Continue Recent Conversation</h3>
-                <ArrowRight className="w-4 h-4 text-foreground-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </div>
-              <p className="text-xs text-foreground-secondary mb-3 line-clamp-2">
-                "{recentConversation.preview}"
-              </p>
-              <div className="flex items-center justify-between text-xs text-foreground-muted">
-                <span className="font-medium">with April</span>
-                <span>{conversationStorage.getTimeAgo()}</span>
-              </div>
-            </div>
-          )}
-
-          {/* New Chat Prompt - Shows when no recent conversation */}
-          {!hasRecentConversation && (
-            <div className="floating-card conversation-card animate-fade-in animation-delay-600 group cursor-pointer opacity-60">
-              <div className="flex items-center justify-center py-4">
-                <p className="text-xs text-foreground-secondary text-center">
-                  No recent conversation found.<br />
-                  Start a new chat above to begin!
-                </p>
-              </div>
-            </div>
-          )}
 
           {/* Live Call Card - Floating */}
           <div 

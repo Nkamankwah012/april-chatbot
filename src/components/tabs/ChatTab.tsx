@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -8,40 +8,30 @@ interface ChatTabProps {
   shouldLoadPrevious?: boolean;
 }
 
-// Reconnect Botpress using the provided CDN + window.botpress API
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
+  const initRef = useRef(false);
+
   useEffect(() => {
-    let mounted = true;
-    const initializedFlag = '__aircare_botpress_initialized__';
-
-    const waitForBotpress = async (timeoutMs = 20000) => {
-      const start = Date.now();
-      while (mounted && !(window as any).botpress && Date.now() - start < timeoutMs) {
+    if (initRef.current) return;
+    
+    const waitForBotpress = async () => {
+      let attempts = 0;
+      while (!(window as any).botpress && attempts < 100) {
         await new Promise((r) => setTimeout(r, 100));
+        attempts++;
       }
-      return (window as any).botpress as any | undefined;
-    };
-
-    const onReady = () => {
-      try {
-        (window as any).botpress?.open?.();
-      } catch {}
+      return (window as any).botpress;
     };
 
     const init = async () => {
       const bp = await waitForBotpress();
-      if (!mounted || !bp) {
-        console.error('Botpress global missing');
+      if (!bp) {
+        console.error('Botpress not available');
         return;
       }
 
-      // Attach once
-      try {
-        bp.off?.('webchat:ready', onReady);
-      } catch {}
-      bp.on?.('webchat:ready', onReady);
-
-      if (!(window as any)[initializedFlag]) {
+      // Initialize once
+      if (!initRef.current) {
         bp.init({
           botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
           clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
@@ -50,13 +40,7 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
             version: 'v2',
             botName: 'April',
             botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
-            botDescription: 'How can I  help you today...',
-            fabImage: 'https://files.bpcontent.cloud/2025/09/19/21/20250919214955-ITA8SVEK.jpeg',
-            website: {},
-            email: {},
-            phone: {},
-            termsOfService: {},
-            privacyPolicy: {},
+            botDescription: 'How can I help you today...',
             color: '#3276EA',
             variant: 'solid',
             headerVariant: 'glass',
@@ -64,29 +48,29 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
             fontFamily: 'inter',
             radius: 4,
             feedbackEnabled: true,
-            footer: '[⚡ by Botpress](https://botpress.com/?from=webchat)',
             soundEnabled: true,
           },
         });
-        (window as any)[initializedFlag] = true;
-      } else {
-        // If already initialized, ensure it opens and rebinds to container
-        try { bp.open?.(); } catch {}
-      }
+        initRef.current = true;
 
-      // Optional: send initial message once chat is ready
-      if (initialMessage) {
-        setTimeout(() => {
-          try { bp.sendMessage?.(initialMessage); } catch {}
-        }, 500);
+        // Open chat when ready
+        bp.on?.('webchat:ready', () => {
+          bp.open?.();
+          
+          // Send initial message if provided
+          if (initialMessage) {
+            setTimeout(() => {
+              bp.sendMessage?.(initialMessage);
+            }, 500);
+          }
+        });
+      } else {
+        // If already initialized, just open it
+        bp.open?.();
       }
     };
 
     void init();
-    return () => {
-      mounted = false;
-      try { (window as any).botpress?.off?.('webchat:ready', onReady); } catch {}
-    };
   }, [initialMessage]);
 
   return (
@@ -108,10 +92,8 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
       )}
 
       {/* Botpress Chat Container */}
-      <div className="flex-1 p-4 relative">
-        {/* Watermark Background */}
-        <div className="watermark-background"></div>
-        <div id="webchat" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }} />
+      <div className="flex-1 relative">
+        <div id="webchat" className="w-full h-full" />
       </div>
     </div>
   );
