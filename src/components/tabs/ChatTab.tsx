@@ -10,61 +10,58 @@ interface ChatTabProps {
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   const initRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let cancelled = false;
-
-    const waitForScript = async () => {
+    const initBotpress = async () => {
+      // Wait for botpress to load
       let attempts = 0;
-      while (!(window as any).botpress && attempts < 100 && !cancelled) {
-        await new Promise((r) => setTimeout(r, 100));
+      while (!window.botpressWebChat && attempts < 50) {
+        await new Promise(r => setTimeout(r, 100));
         attempts++;
       }
-      return (window as any).botpress;
-    };
 
-    const init = async () => {
-      const bp = await waitForScript();
-      if (!bp || cancelled) return;
+      if (!window.botpressWebChat) {
+        console.error('Botpress not loaded');
+        return;
+      }
 
-      if (!initRef.current && !(window as any).__bpInitialized) {
-        // Register open-on-ready BEFORE init to avoid missing the event
-        bp.on?.('webchat:initialized', () => {
-          setTimeout(() => {
-            bp.open?.();
-          }, 300);
-        });
-
-        bp.init({
+      // Initialize only once
+      if (!initRef.current) {
+        window.botpressWebChat.init({
           botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
+          hostUrl: 'https://cdn.botpress.cloud/webchat/v2.2',
+          messagingUrl: 'https://messaging.botpress.cloud',
           clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-          configuration: {
-            botName: 'April',
-            botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
-            botDescription: 'How can I help you today...',
-            color: '#3276EA',
-            variant: 'solid',
-            themeMode: 'light',
-            fontFamily: 'inter',
-            radius: 4,
-            feedbackEnabled: true,
-            soundEnabled: true,
-          },
+          hideWidget: true,
+          containerWidth: '100%',
+          layoutWidth: '100%',
+          showPoweredBy: false,
         });
-
-        (window as any).__bpInitialized = true;
         initRef.current = true;
-      } else {
-        // Already initialized: ensure it's open
-        bp.open?.();
+
+        // Inject webchat into our container
+        if (containerRef.current) {
+          const webchatRoot = document.getElementById('bp-web-widget');
+          if (webchatRoot) {
+            containerRef.current.appendChild(webchatRoot);
+          }
+        }
+
+        // Send initial message if provided
+        if (initialMessage) {
+          setTimeout(() => {
+            window.botpressWebChat?.sendEvent({
+              type: 'proactive-trigger',
+              channel: 'web',
+              payload: { text: initialMessage }
+            });
+          }, 1000);
+        }
       }
     };
 
-    void init();
-
-    return () => {
-      cancelled = true;
-    };
+    initBotpress();
   }, [initialMessage]);
 
   return (
@@ -84,8 +81,7 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         </div>
       )}
 
-      {/* The webchat renders as a floating widget; we simply ensure it's opened so the tab isn't blank */}
-      <div className="flex-1 relative" />
+      <div ref={containerRef} className="flex-1 relative w-full h-full" />
     </div>
   );
 };
