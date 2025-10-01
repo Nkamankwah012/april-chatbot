@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Webchat } from '@botpress/webchat';
 import aprilAvatar from '@/assets/april-avatar-new.jpg';
 
@@ -10,26 +9,15 @@ interface ChatTabProps {
   shouldLoadPrevious: boolean;
 }
 
-export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) {
-  useEffect(() => {
-    // Hide any legacy CDN-based Botpress overlays if they were injected previously
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .bpFab, body > div[class*="bp-"], #bp-web-widget-container { display: none !important; }
-    `;
-    document.head.appendChild(style);
-    return () => { style.remove(); };
-  }, []);
-
+export function ChatTab(_props: ChatTabProps) {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{ width: '100%', height: '100%', minHeight: 420 }}>
       <Webchat
         clientId={clientId}
         style={{ width: '100%', height: '100%' }}
         configuration={{
           botName: 'April',
           botAvatar: aprilAvatar,
-          botDescription: 'How can I help you today...',
           composerPlaceholder: 'Type your message...',
         }}
       />
@@ -38,3 +26,4 @@ export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
 }
 
 export default ChatTab;
+
