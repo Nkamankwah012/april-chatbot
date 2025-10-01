@@ -14,7 +14,7 @@ interface ChatTabProps {
 
 export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) {
   useEffect(() => {
-    // Add custom styles
+    // Add custom styles to hide bubble and embed chat
     const style = document.createElement('style');
     style.innerHTML = `
       #webchat .bpWebchat {
@@ -25,6 +25,12 @@ export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: Ch
         max-width: 100% !important;
       }
       #webchat .bpFab {
+        display: none !important;
+      }
+      .bpFab {
+        display: none !important;
+      }
+      button[aria-label="Toggle Chat Window"] {
         display: none !important;
       }
     `;
