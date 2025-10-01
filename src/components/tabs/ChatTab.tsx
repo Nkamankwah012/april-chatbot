@@ -14,24 +14,45 @@ interface ChatTabProps {
 
 export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) {
   useEffect(() => {
-    // Add custom styles to hide bubble and embed chat
+    // Add custom styles to force inline embedding
     const style = document.createElement('style');
     style.innerHTML = `
-      #webchat .bpWebchat {
-        position: unset !important;
+      /* Hide the floating bubble completely */
+      .bpFab, #webchat .bpFab, button[aria-label="Toggle Chat Window"] {
+        display: none !important;
+      }
+      
+      /* Force webchat to be inline and contained */
+      #webchat {
+        position: relative !important;
+        overflow: hidden !important;
+      }
+      
+      #webchat > div,
+      #webchat .bpWebchat,
+      #webchat iframe {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        max-height: 100% !important;
         max-width: 100% !important;
+        max-height: 100% !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
-      #webchat .bpFab {
+      
+      /* Override any fixed positioning from Botpress */
+      body > div[class*="bp-"] {
         display: none !important;
       }
-      .bpFab {
-        display: none !important;
-      }
-      button[aria-label="Toggle Chat Window"] {
-        display: none !important;
+      
+      #webchat div[class*="bp-"] {
+        display: block !important;
+        position: relative !important;
       }
     `;
     document.head.appendChild(style);
