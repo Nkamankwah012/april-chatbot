@@ -33,11 +33,12 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
           try {
             bp.init({
               hostUrl: 'https://cdn.botpress.cloud/webchat/v0',
-              botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
-              clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
+              botId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
               hideWidget: true,
               containerWidth: '100%',
               layoutWidth: '100%',
+              showPoweredBy: false,
+              stylesheet: 'https://cdn.botpress.cloud/webchat/v0/themes/default.css'
             });
             
             initRef.current = true;
