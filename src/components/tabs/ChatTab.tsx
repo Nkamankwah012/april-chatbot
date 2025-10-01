@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,6 +10,7 @@ interface ChatTabProps {
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   const initRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (initRef.current) return;
@@ -30,12 +31,12 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         return;
       }
 
-      // Initialize once
+      // Initialize once and keep it open
       if (!initRef.current) {
         bp.init({
           botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
           clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-          selector: '#webchat',
+          selector: '#botpress-webchat-container',
           configuration: {
             version: 'v2',
             botName: 'April',
@@ -53,11 +54,10 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         });
         initRef.current = true;
 
-        // Open chat when ready
+        // Auto-open and send initial message
         bp.on?.('webchat:ready', () => {
           bp.open?.();
           
-          // Send initial message if provided
           if (initialMessage) {
             setTimeout(() => {
               bp.sendMessage?.(initialMessage);
@@ -65,7 +65,7 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
           }
         });
       } else {
-        // If already initialized, just open it
+        // Already initialized, just open
         bp.open?.();
       }
     };
@@ -91,9 +91,9 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         </div>
       )}
 
-      {/* Botpress Chat Container */}
-      <div className="flex-1 relative">
-        <div id="webchat" className="w-full h-full" />
+      {/* Botpress Chat Container - Persistent */}
+      <div ref={containerRef} className="flex-1 relative">
+        <div id="botpress-webchat-container" className="w-full h-full" />
       </div>
     </div>
   );
