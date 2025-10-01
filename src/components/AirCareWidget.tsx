@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Home, MessageCircle, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HomeTab } from "./tabs/HomeTab";
-import { ChatTab } from "./tabs/ChatTab";
+import ChatTab from "./tabs/ChatTab";
 import { FAQTab } from "./tabs/FAQTab";
 import aircareLogoImg from "@/assets/aircare-logo.jpeg";
 
@@ -63,11 +63,7 @@ export const AirCareWidget = () => {
         );
       case "chat":
         return (
-          <ChatTab 
-            initialMessage={initialChatMessage} 
-            onBackToHome={() => setActiveTab("home")}
-            shouldLoadPrevious={shouldLoadPrevious}
-          />
+          <ChatTab />
         );
       case "faq":
         return <FAQTab />;
@@ -92,11 +88,7 @@ export const AirCareWidget = () => {
             "absolute inset-0 transition-opacity",
             activeTab === "chat" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           )}>
-            <ChatTab 
-              initialMessage={initialChatMessage}
-              onBackToHome={() => setActiveTab("home")}
-              shouldLoadPrevious={shouldLoadPrevious}
-            />
+            <ChatTab />
           </div>
 
           {/* Animated switcher for non-chat tabs */}
