@@ -11,17 +11,20 @@ interface ChatTabProps {
 
 export function ChatTab(_props: ChatTabProps) {
   return (
-    <div className="w-full h-full" style={{ width: '100%', height: '100%', minHeight: 420 }}>
-      <Webchat
-        clientId={clientId}
-        style={{ width: '100%', height: '100%' }}
-        configuration={{
-          botName: 'April',
-          botAvatar: aprilAvatar,
-          composerPlaceholder: 'Type your message...',
-        }}
-      />
-    </div>
+    <Webchat
+      clientId={clientId}
+      style={{ 
+        width: '100%', 
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+      configuration={{
+        botName: 'April',
+        botAvatar: aprilAvatar,
+        composerPlaceholder: 'Type your message...',
+      }}
+    />
   );
 }
 
