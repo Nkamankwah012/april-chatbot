@@ -1,6 +1,6 @@
+import { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Webchat } from '@botpress/webchat';
 
 interface ChatTabProps {
   initialMessage?: string;
@@ -9,6 +9,70 @@ interface ChatTabProps {
 }
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
+  const initRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initRef.current) return;
+    
+    const waitForBotpress = async () => {
+      let attempts = 0;
+      while (!(window as any).botpress && attempts < 100) {
+        await new Promise((r) => setTimeout(r, 100));
+        attempts++;
+      }
+      return (window as any).botpress;
+    };
+
+    const init = async () => {
+      const bp = await waitForBotpress();
+      if (!bp) {
+        console.error('Botpress not available');
+        return;
+      }
+
+      // Initialize once and keep it open
+      if (!initRef.current) {
+        bp.init({
+          botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
+          clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
+          selector: '#botpress-webchat-container',
+          configuration: {
+            version: 'v2',
+            botName: 'April',
+            botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
+            botDescription: 'How can I help you today...',
+            color: '#3276EA',
+            variant: 'solid',
+            headerVariant: 'glass',
+            themeMode: 'light',
+            fontFamily: 'inter',
+            radius: 4,
+            feedbackEnabled: true,
+            soundEnabled: true,
+          },
+        });
+        initRef.current = true;
+
+        // Auto-open and send initial message
+        bp.on?.('webchat:ready', () => {
+          bp.open?.();
+          
+          if (initialMessage) {
+            setTimeout(() => {
+              bp.sendMessage?.(initialMessage);
+            }, 500);
+          }
+        });
+      } else {
+        // Already initialized, just open
+        bp.open?.();
+      }
+    };
+
+    void init();
+  }, [initialMessage]);
+
   return (
     <div className="h-full flex flex-col">
       {/* Header with back button */}
@@ -27,12 +91,9 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         </div>
       )}
 
-      {/* Botpress Webchat (React SDK) */}
-      <div className="flex-1 relative watermark-background">
-        <Webchat
-          clientId="7a37af73-17ed-43ef-895a-1d77238c02e7"
-          style={{ width: '100%', height: '100%', display: 'flex' }}
-        />
+      {/* Botpress Chat Container - CDN Script Method */}
+      <div ref={containerRef} className="flex-1 relative watermark-background">
+        <div id="botpress-webchat-container" className="w-full h-full" />
       </div>
     </div>
   );
