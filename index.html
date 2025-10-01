@@ -23,6 +23,56 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      (function () {
+        if (typeof window === 'undefined' || typeof window.fetch !== 'function' || typeof Request === 'undefined') return;
+        var originalFetch = window.fetch.bind(window);
+        window.fetch = function (input, init) {
+          try {
+            if (input instanceof Request) {
+              var req = input;
+              var headers = {};
+              req.headers.forEach(function (v, k) { headers[k] = v; });
+              var clone = req.clone();
+
+              if (req.method !== 'GET' && req.method !== 'HEAD') {
+                return clone.blob().then(function (body) {
+                  return originalFetch(req.url, Object.assign({
+                    method: req.method,
+                    headers: headers,
+                    body: body,
+                    credentials: req.credentials,
+                    mode: req.mode,
+                    cache: req.cache,
+                    redirect: req.redirect,
+                    referrer: req.referrer,
+                    referrerPolicy: req.referrerPolicy,
+                    integrity: req.integrity,
+                    keepalive: req.keepalive,
+                    signal: req.signal
+                  }, init));
+                });
+              } else {
+                return originalFetch(req.url, Object.assign({
+                  method: req.method,
+                  headers: headers,
+                  credentials: req.credentials,
+                  mode: req.mode,
+                  cache: req.cache,
+                  redirect: req.redirect,
+                  referrer: req.referrer,
+                  referrerPolicy: req.referrerPolicy,
+                  integrity: req.integrity,
+                  keepalive: req.keepalive,
+                  signal: req.signal
+                }, init));
+              }
+            }
+          } catch (e) { /* no-op */ }
+          return originalFetch(input, init);
+        };
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
