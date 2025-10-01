@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,72 +10,62 @@ interface ChatTabProps {
 
 export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
   const initRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (initRef.current) return;
-    
-    const waitForBotpress = async () => {
+    const initBotpress = async () => {
+      // Wait for botpress to load
       let attempts = 0;
-      while (!(window as any).botpress && attempts < 100) {
-        await new Promise((r) => setTimeout(r, 100));
+      while (!window.botpressWebChat && attempts < 50) {
+        await new Promise(r => setTimeout(r, 100));
         attempts++;
       }
-      return (window as any).botpress;
-    };
 
-    const init = async () => {
-      const bp = await waitForBotpress();
-      if (!bp) {
-        console.error('Botpress not available');
+      if (!window.botpressWebChat) {
+        console.error('Botpress not loaded');
         return;
       }
 
-      // Initialize once
+      // Initialize only once
       if (!initRef.current) {
-        bp.init({
+        window.botpressWebChat.init({
           botId: '4bc55b81-20c1-4907-95e8-b4eb5cc763ab',
+          hostUrl: 'https://cdn.botpress.cloud/webchat/v2.2',
+          messagingUrl: 'https://messaging.botpress.cloud',
           clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
-          selector: '#webchat',
-          configuration: {
-            version: 'v2',
-            botName: 'April',
-            botAvatar: 'https://files.bpcontent.cloud/2025/09/21/21/20250921214137-IW2L3BVO.jpeg',
-            botDescription: 'How can I help you today...',
-            color: '#3276EA',
-            variant: 'solid',
-            headerVariant: 'glass',
-            themeMode: 'light',
-            fontFamily: 'inter',
-            radius: 4,
-            feedbackEnabled: true,
-            soundEnabled: true,
-          },
+          hideWidget: true,
+          containerWidth: '100%',
+          layoutWidth: '100%',
+          showPoweredBy: false,
         });
         initRef.current = true;
 
-        // Open chat when ready
-        bp.on?.('webchat:ready', () => {
-          bp.open?.();
-          
-          // Send initial message if provided
-          if (initialMessage) {
-            setTimeout(() => {
-              bp.sendMessage?.(initialMessage);
-            }, 500);
+        // Inject webchat into our container
+        if (containerRef.current) {
+          const webchatRoot = document.getElementById('bp-web-widget');
+          if (webchatRoot) {
+            containerRef.current.appendChild(webchatRoot);
           }
-        });
-      } else {
-        // If already initialized, just open it
-        bp.open?.();
+        }
+
+        // Send initial message if provided
+        if (initialMessage) {
+          setTimeout(() => {
+            window.botpressWebChat?.sendEvent({
+              type: 'proactive-trigger',
+              channel: 'web',
+              payload: { text: initialMessage }
+            });
+          }, 1000);
+        }
       }
     };
 
-    void init();
+    initBotpress();
   }, [initialMessage]);
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header with back button */}
       {onBackToHome && (
         <div className="p-4 border-b border-border/30 bg-white/50 backdrop-blur-sm">
           <div className="flex items-center space-x-3">
@@ -91,10 +81,7 @@ export const ChatTab = ({ initialMessage, onBackToHome }: ChatTabProps) => {
         </div>
       )}
 
-      {/* Botpress Chat Container */}
-      <div className="flex-1 relative">
-        <div id="webchat" className="w-full h-full" />
-      </div>
+      <div ref={containerRef} className="flex-1 relative w-full h-full" />
     </div>
   );
 };
