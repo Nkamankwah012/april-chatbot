@@ -1,6 +1,10 @@
-import { Webchat } from '@botpress/webchat';
+import { useEffect } from 'react';
 
-const clientId = "7a37af73-17ed-43ef-895a-1d77238c02e7";
+declare global {
+  interface Window {
+    botpressWebChat: any;
+  }
+}
 
 interface ChatTabProps {
   initialMessage?: string;
@@ -9,18 +13,30 @@ interface ChatTabProps {
 }
 
 export function ChatTab({ initialMessage, onBackToHome, shouldLoadPrevious }: ChatTabProps) {
-  return (
-    <div className="w-full h-full">
-      <Webchat 
-        clientId={clientId}
-        configuration={{
-          botName: "April",
-          botAvatar: "https://via.placeholder.com/40/f97316/ffffff?text=A",
-          composerPlaceholder: "Type your message..."
-        }}
-      />
-    </div>
-  );
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.botpress.cloud/webchat/v1/inject.js';
+    script.async = true;
+    
+    document.body.appendChild(script);
+    
+    script.onload = () => {
+      window.botpressWebChat.init({
+        botId: '7a37af73-17ed-43ef-895a-1d77238c02e7',
+        hostUrl: 'https://cdn.botpress.cloud/webchat/v1',
+        messagingUrl: 'https://messaging.botpress.cloud',
+        clientId: '7a37af73-17ed-43ef-895a-1d77238c02e7'
+      });
+    };
+
+    return () => {
+      if (script.parentNode) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  return <div id="webchat" style={{ width: '100%', height: '100%' }} />;
 }
 
 export default ChatTab;
